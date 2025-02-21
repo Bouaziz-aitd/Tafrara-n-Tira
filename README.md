@@ -1,1 +1,1 @@
-Azul wa d asnas i ulmad n tutlqyt Tamaziɣt Taqbaylit s tugniwin. 
+Azul wa d asnas i ulmad n tutlayt Tamaziɣt Taqbaylit s tugniwin. 

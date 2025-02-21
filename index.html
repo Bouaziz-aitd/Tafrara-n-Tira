@@ -3,75 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Almad n teqbaylit s wunuɣen - Apprendre taqbaylit avec des images</title>
+    <title>Almad n teqbaylit s tugniwin - Apprendre taqbaylit avec des images</title>
     <style>
-        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Start from the top */
-            height: auto; /* Adjust height dynamically */
-            min-height: 100vh; /* Ensure full viewport height */
+            justify-content: center;
+            height: 100vh;
             background-color: #f9f9f9;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
-
         h1 {
             margin-bottom: 20px;
-            font-size: 1.8rem; /* Responsive font size */
-            text-align: center;
         }
-
-        .category-title {
-            margin-bottom: 20px;
-            font-size: 1.2rem; /* Responsive font size */
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-        }
-
         .game-container {
             display: flex;
-            flex-direction: column; /* Stack items vertically on small screens */
-            align-items: center;
-            width: 100%;
+            justify-content: space-between;
+            width: 90%;
             max-width: 1200px;
-            max-height: 90vh;
-            overflow: auto;
-            box-sizing: border-box;
-            padding: 10px;
-            gap: 20px; /* Add spacing between elements */
         }
-
         .image-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Responsive grid */
-            gap: 10px;
-            width: 100%;
+            grid-template-columns: repeat(3, 150px);
+            gap: 15px;
         }
-
+        .word-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
         .cell {
             position: relative;
-            width: 100%; /* Make cells responsive */
-            aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+            width: 150px;
             border: 2px dashed #ccc;
             border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.3s;
         }
-
         .cell img {
             width: 100%;
-            height: 100%;
+            height: 150px;
             object-fit: cover;
         }
-
         .feedback-container {
             display: flex;
             justify-content: space-between;
@@ -80,100 +56,79 @@
             background-color: #f0f0f0;
             border-top: 2px solid #ccc;
         }
-
         .feedback {
-            font-size: 1.2rem; /* Responsive font size */
+            font-size: 20px;
         }
-
         .correct {
             color: green;
         }
-
         .incorrect {
             color: red;
         }
-
         .hidden {
             display: none;
         }
-
         .controls {
             margin-top: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
         }
-
-        /* Button Styles */
-        .word-button, .controls button {
-            font-size: 1rem; /* Use relative units for scalability */
-            padding: 8px 16px; /* Add consistent spacing inside buttons */
-            white-space: nowrap; /* Prevent text from wrapping */
-            border: none; /* Remove borders for a cleaner look */
-            border-radius: 5px; /* Add rounded corners */
-            cursor: pointer; /* Indicate clickable elements */
-            transition: background-color 0.3s, transform 0.3s; /* Smooth hover effects */
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-
-        /* Hover Effects */
-        .word-button:hover, .controls button:hover {
-            transform: scale(1.05); /* Slightly enlarge on hover */
-        }
-
-        .word-button {
-            background-color: #007bff;
-            color: white;
-        }
-
         .controls button.play-again {
             background-color: #28a745;
             color: white;
         }
-
+        .controls button.play-again:hover {
+            background-color: #218838;
+        }
         .controls button.exit {
             background-color: #dc3545;
             color: white;
         }
-
+        .controls button.exit:hover {
+            background-color: #c82333;
+        }
         .instructions {
             margin-top: 20px;
-            font-size: 1rem; /* Responsive font size */
+            font-size: 14px;
             color: #555;
-            text-align: center;
         }
-
+        .word-button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: grab;
+            text-align: center;
+            user-select: none;
+        }
+        .word-button.dragging {
+            opacity: 0.5;
+        }
+        .category-title {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
         .credit-note {
             margin-top: 20px;
-            font-size: 0.9rem; /* Responsive font size */
+            font-size: 12px;
             color: #888;
             text-align: center;
-        }
-
-        /* Prevent Scrolling During Drag-and-Drop */
-        body.dragging {
-            overflow: hidden;
-            touch-action: none; /* Disable touch gestures like panning */
-        }
-
-        /* Media Queries for Smaller Screens */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-            .word-button, .controls button {
-                font-size: 0.9rem;
-                padding: 8px 12px;
-            }
-            .instructions, .credit-note {
-                font-size: 0.8rem;
-            }
         }
     </style>
 </head>
 <body>
 
-<h1>Lmed taqbaylit s wunuɣen</h1>
+<h1>Lmed Taqbaylit s Tugniwin</h1>
 <div class="category-title">Iɣersiwen - Asebter 1</div>
 <div class="game-container">
     <div class="image-grid" id="imageGrid"></div>
@@ -269,24 +224,13 @@
         });
     }
 
-    // Track whether the user is dragging
-    let isDragging = false;
-
     function handleDragStart(e, button) {
         e.dataTransfer.setData('text/plain', button.textContent);
         button.classList.add('dragging');
-        isDragging = true;
-
-        // Add 'dragging' class to body to prevent scrolling
-        document.body.classList.add('dragging');
     }
 
     function handleDragEnd(button) {
         button.classList.remove('dragging');
-        isDragging = false;
-
-        // Remove 'dragging' class from body to re-enable scrolling
-        document.body.classList.remove('dragging');
     }
 
     function handleDrop(e, cell, wordLabel, feedback) {
@@ -339,13 +283,6 @@
             }
         }
     }
-
-    // Prevent default behavior for touch events during drag
-    document.addEventListener('touchmove', (e) => {
-        if (isDragging) {
-            e.preventDefault(); // Prevent scrolling while dragging
-        }
-    }, { passive: false }); // Required to allow `e.preventDefault()`
 
     createGame(); // Initialize the game on page load
 </script>

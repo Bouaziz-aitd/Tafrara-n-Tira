@@ -159,7 +159,6 @@
     <div class="credit-note">
         Tugniwin : <a href="https://unsplash.com" target="_blank" style="color: #888; text-decoration: none;">Unsplash</a> - asali : Bouaziz Ait Driss
     </div>
-
     <script>
         // Fullscreen function
         function openFullscreen() {
@@ -210,31 +209,23 @@
             data.forEach((item) => {
                 let cell = document.createElement('div');
                 cell.classList.add('cell');
-
                 let img = document.createElement('img');
                 img.src = item.src;
                 img.alt = "Image";
-
                 let feedbackContainer = document.createElement('div');
                 feedbackContainer.classList.add('feedback-container');
-
                 let wordLabel = document.createElement('span');
                 wordLabel.textContent = ""; // Initially empty
                 wordLabel.style.flexGrow = 1;
-
                 let feedback = document.createElement('span');
                 feedback.classList.add('feedback');
-
                 feedbackContainer.appendChild(wordLabel);
                 feedbackContainer.appendChild(feedback);
-
                 cell.dataset.correctWord = item.word; // Store correct word as data attribute
                 cell.appendChild(img);
                 cell.appendChild(feedbackContainer);
-
                 cell.addEventListener('dragover', (e) => e.preventDefault());
                 cell.addEventListener('drop', (e) => handleDrop(e, cell, wordLabel, feedback));
-
                 imageGrid.appendChild(cell);
             });
 
@@ -245,9 +236,11 @@
                 button.classList.add('word-button');
                 button.draggable = true;
 
+                // Add click event to play audio
+                button.onclick = () => playAudio(`audio/${word}.mp3`);
+
                 button.addEventListener('dragstart', (e) => handleDragStart(e, button));
                 button.addEventListener('dragend', () => handleDragEnd(button));
-
                 wordList.appendChild(button);
             });
         }
@@ -272,7 +265,6 @@
 
             // Update word label and feedback
             wordLabel.textContent = word;
-
             if (word === correctWord) {
                 feedback.textContent = "✔";
                 feedback.classList.add('correct');
@@ -312,6 +304,15 @@
             }
         }
 
+        // Audio player functionality
+        function playAudio(audioFilePath) {
+            const audioPlayer = document.getElementById('gameAudio');
+            audioPlayer.src = audioFilePath; // Set the audio file source
+            audioPlayer.play().catch(error => {
+                console.error("Error playing audio:", error);
+            });
+        }
+
         // Add event listener to the "Launch Game" button
         document.getElementById('launchGameButton').addEventListener('click', () => {
             openFullscreen(); // Enter fullscreen mode
@@ -320,5 +321,8 @@
             createGame(); // Initialize the game
         });
     </script>
+
+    <!-- Hidden audio player -->
+    <audio id="gameAudio" preload="auto"></audio>
 </body>
 </html>

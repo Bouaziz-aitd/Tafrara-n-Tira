@@ -237,7 +237,7 @@
                 button.draggable = true;
 
                 // Add click event to play audio
-                button.onclick = () => playAudio(`audio/${word}.mp3`);
+                button.onclick = () => playAudio(`audio/${word}.ogg`);
 
                 button.addEventListener('dragstart', (e) => handleDragStart(e, button));
                 button.addEventListener('dragend', () => handleDragEnd(button));
@@ -323,6 +323,10 @@
     </script>
 
     <!-- Hidden audio player -->
-    <audio id="gameAudio" preload="auto"></audio>
+    <audio id="gameAudio" preload="auto">
+    	<source src="audio/word.ogg" type="audio/ogg">
+    	<source src="audio/word.mp3" type="audio/mpeg">
+    	Your browser does not support the audio element.
+</audio>
 </body>
 </html>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lmed Taqbaylit s Tefyar</title>
     <style>
+        /* Existing CSS styles remain unchanged */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -127,8 +128,8 @@
         #launchGameButton:hover {
             background-color: #0056b3;
         }
-        /* Styling for the Next Sentence button */
-        #nextButton {
+        /* Styling for the Next Sentence and Listen buttons */
+        #nextButton, #listenButton {
             padding: 10px 20px;
             font-size: 16px;
             background-color: #28a745; /* Green color */
@@ -138,14 +139,14 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        #nextButton:hover {
+        #nextButton:hover, #listenButton:hover {
             background-color: #218838;
         }
     </style>
 </head>
 <body>
-    <h1>TAFRARA n TIRA</h1>
-    <div class="subtitle">Tafyirt Tasuqilt</div>
+    <h1>Lmed Taqbaylit s Tefyar</h1>
+    <div class="subtitle">Tafyirt Tasuqilt - Alaɣmu 2.1 </div>
     <!-- Launch Game Button -->
     <button id="launchGameButton">URAR</button>
     <div class="game-container hidden" id="gameContainer">
@@ -156,6 +157,7 @@
         <div class="word-list" id="wordList"></div>
         <div class="feedback" id="feedback"></div>
         <div class="controls hidden" id="controls">
+            <button id="listenButton" onclick="listenToSentence()">Sel i tefyirt</button> <!-- Listen Button -->
             <button id="nextButton" onclick="nextSentence()">DDU</button>
             <button class="play-again hidden" onclick="resetGame()">Rnu Urar</button>
             <button class="exit hidden" onclick="exitGame()">Ffeɣ</button>
@@ -163,6 +165,7 @@
     </div>
     <div class="instructions">
         Jbed awal, sers-it deg umkan iwulmen.
+        Tekki ɣef wawal ad as-tesleḍ.
     </div>
 
     <script>
@@ -181,6 +184,7 @@
         }
 
         // Data and game initialization
+	// Set #1
         const sentences = [
             {
                 french: "Bonjour, comment ça va ?",
@@ -203,8 +207,8 @@
             {
                 french: "Excuse-moi, où est la salle de classe ?",
                 english: "Excuse me, where is the classroom?",
-                kabyle: "suref-iyi, anda tella tneɣrit?", // No space before ?
-                words: ["suref-iyi", "anda", "tella", "tneɣrit"]
+                kabyle: "suref-iyi, anda tella tneɣrit?", // Corrected "anida" to "anda" and "tnɣrit" to "tneɣrit"
+                words: ["suref-iyi", "anda", "tella", "tneɣrit"] // Updated words
             },
             {
                 french: "Oui, je veux bien jouer avec toi.",
@@ -275,6 +279,7 @@
 
             document.getElementById('feedback').textContent = '';
             document.getElementById('controls').classList.add('hidden');
+            document.getElementById('listenButton').classList.add('hidden'); // Hide the Listen button initially
         }
 
         function handleDragStart(e, button) {
@@ -308,21 +313,24 @@
             const userAnswer = answerPlaceholders.map(p => p.textContent).join(' ');
 
             if (userAnswer === correctSentenceWithoutPunctuation) {
-                feedback.textContent = 'Ayuz!';
+                feedback.textContent = 'Correct!';
                 feedback.classList.add('correct');
                 feedback.classList.remove('incorrect');
             } else {
-                feedback.textContent = `Diri-tt. Aseɣti: ${sentence.kabyle}`;
+                feedback.textContent = `Dir tiririt. Aseɣti-s d ta : ${sentence.kabyle}`;
                 feedback.classList.add('incorrect');
                 feedback.classList.remove('correct');
             }
 
             document.getElementById('controls').classList.remove('hidden');
+            document.getElementById('listenButton').classList.remove('hidden'); // Show the Listen button
 
             if (currentSentenceIndex === sentences.length - 1) {
                 document.getElementById('nextButton').classList.add('hidden');
                 document.querySelector('.play-again').classList.remove('hidden');
                 document.querySelector('.exit').classList.remove('hidden');
+            } else {
+                document.getElementById('nextButton').classList.remove('hidden');
             }
         }
 
@@ -334,8 +342,11 @@
         }
 
         function resetGame() {
-            currentSentenceIndex = 0;
-            createGame();
+            currentSentenceIndex = 0; // Reset the sentence index to restart the cycle
+            createGame(); // Reinitialize the game
+            document.getElementById('controls').classList.add('hidden'); // Hide controls initially
+            document.querySelector('.play-again').classList.add('hidden'); // Hide the "Play Again" button
+            document.querySelector('.exit').classList.add('hidden'); // Hide the "Exit" button
         }
 
         function exitGame() {
@@ -346,6 +357,44 @@
                     alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
                 }
             }
+        }
+
+        // Function to listen to the sentence
+        function listenToSentence() {
+            const sentence = sentences[currentSentenceIndex];
+            const feedback = document.getElementById('feedback');
+
+            let sentenceToRead = '';
+            if (feedback.classList.contains('correct')) {
+                // Read the user's answer from placeholders
+                sentenceToRead = answerPlaceholders.map(p => p.textContent).join(' ');
+            } else {
+                // Read the correct Kabyle sentence
+                sentenceToRead = sentence.kabyle;
+            }
+
+            // Generate the audio file name using underscores and removing punctuation
+            const audioFileName = generateAudioFileName(sentenceToRead);
+
+            // Play the audio
+            const audioPlayer = document.getElementById('gameAudio');
+            audioPlayer.src = `audio/${audioFileName}`;
+            audioPlayer.onerror = () => {
+                console.error(`Error: Audio file not found or cannot be loaded: audio/${audioFileName}`);
+                alert("Ulac amesli. Mdel asfaylu? ESC akken ad tuɣaleḍ s alaɣmu.");
+            };
+            audioPlayer.play().catch(error => {
+                console.error(`Error playing audio file: ${audioFileName}`, error);
+                alert("Ulac amesli. Mdel asfaylu? ESC akken ad tuɣaleḍ s alaɣmu.");
+            });
+        }
+
+        // Function to generate audio file names
+        function generateAudioFileName(sentence) {
+            return sentence
+                .replace(/[?,.]/g, '') // Remove punctuation (?, .)
+                .replace(/\s+/g, '_')  // Replace spaces with underscores
+                .trim() + '.ogg';      // Add the file extension
         }
 
         // Audio player functionality

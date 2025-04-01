@@ -20,7 +20,7 @@
         }
         .game-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around; /* Adjusted for better spacing */
             width: 90%;
             max-width: 1200px;
         }
@@ -28,6 +28,7 @@
             display: grid;
             grid-template-columns: repeat(3, 120px); /* Reduced size */
             gap: 15px;
+            margin-left: 40px; /* Push the grid slightly to the right */
         }
         .word-list {
             display: flex;
@@ -173,7 +174,6 @@
                 elem.msRequestFullscreen();
             }
         }
-
         // Data and game initialization
         const data = [
              { src: "https://images.unsplash.com/photo-1624140716840-5d89f311f500", word: "argaz" }, // Man
@@ -191,7 +191,6 @@
         let wordList = document.getElementById('wordList');
         let controls = document.getElementById('controls');
         let completedCells = 0;
-
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -199,12 +198,10 @@
             }
             return array;
         }
-
         function createGame() {
             // Shuffle data and add distractors
             let allWords = [...data.map(item => item.word), ...distractors];
             allWords = shuffleArray(allWords);
-
             // Create image grid
             data.forEach((item) => {
                 let cell = document.createElement('div');
@@ -228,41 +225,33 @@
                 cell.addEventListener('drop', (e) => handleDrop(e, cell, wordLabel, feedback));
                 imageGrid.appendChild(cell);
             });
-
             // Create word list
             allWords.forEach(word => {
                 let button = document.createElement('button');
                 button.textContent = word;
                 button.classList.add('word-button');
                 button.draggable = true;
-
                 // Add click event to play audio
                 button.onclick = () => playAudio(`audio/${word}.ogg`);
-
                 button.addEventListener('dragstart', (e) => handleDragStart(e, button));
                 button.addEventListener('dragend', () => handleDragEnd(button));
                 wordList.appendChild(button);
             });
         }
-
         function handleDragStart(e, button) {
             e.dataTransfer.setData('text/plain', button.textContent);
             button.classList.add('dragging');
         }
-
         function handleDragEnd(button) {
             button.classList.remove('dragging');
         }
-
         function handleDrop(e, cell, wordLabel, feedback) {
             e.preventDefault();
             const word = e.dataTransfer.getData('text/plain');
             const correctWord = cell.dataset.correctWord;
-
             // Clear previous feedback
             feedback.textContent = "";
             wordLabel.textContent = "";
-
             // Update word label and feedback
             wordLabel.textContent = word;
             if (word === correctWord) {
@@ -274,10 +263,8 @@
                 feedback.classList.add('incorrect');
                 feedback.classList.remove('correct');
             }
-
             // Increment interaction counter
             completedCells++;
-
             // Show controls when all cells are interacted with
             if (completedCells === data.length) {
                 setTimeout(() => {
@@ -285,7 +272,6 @@
                 }, 500);
             }
         }
-
         function resetGame() {
             imageGrid.innerHTML = '';
             wordList.innerHTML = '';
@@ -293,7 +279,6 @@
             completedCells = 0;
             createGame();
         }
-
         function exitGame() {
             if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
                 try {
@@ -303,7 +288,6 @@
                 }
             }
         }
-
         // Audio player functionality
         function playAudio(audioFilePath) {
             const audioPlayer = document.getElementById('gameAudio');
@@ -312,7 +296,6 @@
                 console.error("Error playing audio:", error);
             });
         }
-
         // Add event listener to the "Launch Game" button
         document.getElementById('launchGameButton').addEventListener('click', () => {
             openFullscreen(); // Enter fullscreen mode
@@ -321,12 +304,11 @@
             createGame(); // Initialize the game
         });
     </script>
-
     <!-- Hidden audio player -->
     <audio id="gameAudio" preload="auto">
-    	<source src="audio/word.ogg" type="audio/ogg">
-    	<source src="audio/word.mp3" type="audio/mpeg">
-    	Your browser does not support the audio element.
-</audio>
+        <source src="audio/word.ogg" type="audio/ogg">
+        <source src="audio/word.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 </body>
 </html>

@@ -1,314 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Almad n teqbaylit s tugniwin - Apprendre taqbaylit avec des images</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f9f9f9;
-            margin: 0;
-        }
-        h1 {
-            margin-bottom: 20px;
-        }
-        .game-container {
-            display: flex;
-            justify-content: space-around; /* Adjusted for better spacing */
-            width: 90%;
-            max-width: 1200px;
-        }
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 120px); /* Reduced size */
-            gap: 15px;
-            margin-left: 40px; /* Push the grid slightly to the right */
-        }
-        .word-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .cell {
-            position: relative;
-            width: 120px; /* Reduced size */
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        .cell img {
-            width: 100%;
-            height: 120px; /* Reduced size */
-            object-fit: cover;
-        }
-        .feedback-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border-top: 2px solid #ccc;
-        }
-        .feedback {
-            font-size: 20px;
-        }
-        .correct {
-            color: green;
-        }
-        .incorrect {
-            color: red;
-        }
-        .hidden {
-            display: none;
-        }
-        .controls {
-            margin-top: 20px;
-        }
-        .controls button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 0 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .controls button.play-again {
-            background-color: #28a745;
-            color: white;
-        }
-        .controls button.play-again:hover {
-            background-color: #218838;
-        }
-        .controls button.exit {
-            background-color: #dc3545;
-            color: white;
-        }
-        .controls button.exit:hover {
-            background-color: #c82333;
-        }
-        .instructions {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #555;
-        }
-        .word-button {
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: grab;
-            text-align: center;
-            user-select: none;
-        }
-        .word-button.dragging {
-            opacity: 0.5;
-        }
-        .category-title {
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-        .credit-note {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-        }
-        /* Styling for the Launch Game button */
-        #launchGameButton {
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #launchGameButton:hover {
-            background-color: #0056b3;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almad n teqbaylit s tugniwin - Apprendre taqbaylit avec des images</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+    margin: 0;
+}
+h1 {
+    margin-bottom: 20px;
+}
+.game-container {
+    display: flex;
+    justify-content: center; /* Center the container */
+    gap: 50px; /* Add spacing between image grid and word list */
+    width: 90%;
+    max-width: 1200px;
+}
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 150px); /* Two columns */
+    gap: 15px;
+}
+.word-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: auto; /* Adjust width to fit buttons */
+}
+.cell {
+    position: relative;
+    width: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.cell img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+.feedback-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: #f0f0f0;
+    border-top: 2px solid #ccc;
+}
+.feedback {
+    font-size: 20px;
+}
+.correct {
+    color: green;
+}
+.incorrect {
+    color: red;
+}
+.hidden {
+    display: none;
+}
+.controls {
+    margin-top: 20px;
+}
+.controls button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.controls button.play-again {
+    background-color: #28a745;
+    color: white;
+}
+.controls button.play-again:hover {
+    background-color: #218838;
+}
+.controls button.exit {
+    background-color: #dc3545;
+    color: white;
+}
+.controls button.exit:hover {
+    background-color: #c82333;
+}
+.instructions {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+.word-button {
+    padding: 5px 10px; /* Smaller padding for compact buttons */
+    font-size: 14px; /* Smaller font size */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: grab;
+    text-align: center;
+    user-select: none;
+}
+.word-button.dragging {
+    opacity: 0.5;
+}
+.category-title {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+.credit-note {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+}
+/* Styling for the Launch Game button */
+#launchGameButton {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#launchGameButton:hover {
+    background-color: #0056b3;
+}
+</style>
 </head>
 <body>
-    <h1>TAFRARA n TIRA</h1>
-    <div class="category-title">Awal Tawlift</div>
-    <!-- Launch Game Button -->
-    <button id="launchGameButton">URAR</button>
-    <div class="game-container hidden" id="gameContainer">
-        <div class="image-grid" id="imageGrid"></div>
-        <div class="word-list" id="wordList"></div>
-    </div>
-    <div class="controls hidden" id="controls">
-        <button class="play-again" onclick="resetGame()">Rnu Urar</button>
-        <button class="exit" onclick="exitGame()">Ffeɣ</button>
-    </div>
-    <div class="instructions">
-        Jbed awal, sers-it ɣef tugna iwulmen.
-    </div>
-    <div class="credit-note">
-        Tugniwin : <a href="https://unsplash.com" target="_blank" style="color: #888; text-decoration: none;">Unsplash</a> - asali : Bouaziz Ait Driss
-    </div>
-    <script>
-        // Fullscreen function
-        function openFullscreen() {
-            const elem = document.documentElement; // Targets the entire page
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
-            }
+<h1>Lmed Taqbaylit s Tugniwin</h1>
+<div class="category-title">Iɣersiwen - Asebter 1</div>
+<!-- Launch Game Button -->
+<button id="launchGameButton">URAR</button>
+<div class="game-container hidden" id="gameContainer">
+    <div class="image-grid" id="imageGrid"></div>
+    <div class="word-list" id="wordList"></div>
+</div>
+<div class="controls hidden" id="controls">
+    <button class="play-again" onclick="resetGame()">Rnu Urar</button>
+    <button class="exit" onclick="exitGame()">Ffeɣ</button>
+</div>
+<div class="instructions">
+    Jbed awal, sers-it ɣef tugna iwulmen.
+</div>
+<div class="credit-note">
+    Tugniwin : <a href="https://unsplash.com" target="_blank" style="color: #888; text-decoration: none;">Unsplash</a> 
+</div>
+<script>
+// Fullscreen function
+function openFullscreen() {
+    const elem = document.documentElement; // Targets the entire page
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { // Firefox
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE/Edge
+        elem.msRequestFullscreen();
+    }
+}
+// Data and game initialization
+const data = [
+    { src: "https://images.unsplash.com/photo-1624140716840-5d89f311f500", word: "argaz" }, // Man
+    { src: "https://images.unsplash.com/photo-1667132970685-a2109a3ed00d", word: "tameṭṭut" }, // Woman
+    { src: "https://images.unsplash.com/photo-1620436226596-46a359a295bc", word: "aqcic" }, // Boy
+    { src: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9", word: "taqcict" }, // Girl
+    { src: "https://images.unsplash.com/photo-1587040273238-9ba47c714796", word: "amɣar" }, // Elder man
+    { src: "https://images.unsplash.com/photo-1498757581981-8ddb3c0b9b07", word: "tamɣart" } // Elder woman
+];
+const distractors = ["azul", "amek", "tettiliḍ"]; // Non-applicable words
+let imageGrid = document.getElementById('imageGrid');
+let wordList = document.getElementById('wordList');
+let controls = document.getElementById('controls');
+let completedCells = 0;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function createGame() {
+    let allWords = [...data.map(item => item.word), ...distractors];
+    allWords = shuffleArray(allWords);
+    data.forEach((item) => {
+        let cell = document.createElement('div');
+        cell.classList.add('cell');
+        let img = document.createElement('img');
+        img.src = item.src;
+        img.alt = "Image";
+        let feedbackContainer = document.createElement('div');
+        feedbackContainer.classList.add('feedback-container');
+        let wordLabel = document.createElement('span');
+        wordLabel.textContent = ""; // Initially empty
+        wordLabel.style.flexGrow = 1;
+        let feedback = document.createElement('span');
+        feedback.classList.add('feedback');
+        feedbackContainer.appendChild(wordLabel);
+        feedbackContainer.appendChild(feedback);
+        cell.dataset.correctWord = item.word; // Store correct word as data attribute
+        cell.appendChild(img);
+        cell.appendChild(feedbackContainer);
+        cell.addEventListener('dragover', (e) => e.preventDefault());
+        cell.addEventListener('drop', (e) => handleDrop(e, cell, wordLabel, feedback));
+        imageGrid.appendChild(cell);
+    });
+    allWords.forEach(word => {
+        let button = document.createElement('button');
+        button.textContent = word;
+        button.classList.add('word-button');
+        button.draggable = true;
+        button.onclick = () => playAudio(`audio/${word}.ogg`);
+        button.addEventListener('dragstart', (e) => handleDragStart(e, button));
+        button.addEventListener('dragend', () => handleDragEnd(button));
+        wordList.appendChild(button);
+    });
+}
+
+function handleDragStart(e, button) {
+    e.dataTransfer.setData('text/plain', button.textContent);
+    button.classList.add('dragging');
+}
+
+function handleDragEnd(button) {
+    button.classList.remove('dragging');
+}
+
+function handleDrop(e, cell, wordLabel, feedback) {
+    e.preventDefault();
+    const word = e.dataTransfer.getData('text/plain');
+    const correctWord = cell.dataset.correctWord;
+    feedback.textContent = "";
+    wordLabel.textContent = "";
+    wordLabel.textContent = word;
+    if (word === correctWord) {
+        feedback.textContent = "✔";
+        feedback.classList.add('correct');
+        feedback.classList.remove('incorrect');
+    } else {
+        feedback.textContent = "✘";
+        feedback.classList.add('incorrect');
+        feedback.classList.remove('correct');
+    }
+    completedCells++;
+    if (completedCells === data.length) {
+        setTimeout(() => {
+            controls.classList.remove('hidden');
+        }, 500);
+    }
+}
+
+function resetGame() {
+    imageGrid.innerHTML = '';
+    wordList.innerHTML = '';
+    controls.classList.add('hidden');
+    completedCells = 0;
+    createGame();
+}
+
+function exitGame() {
+    if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
+        try {
+            window.close();
+        } catch (error) {
+            alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
         }
-        // Data and game initialization
-        const data = [
-             { src: "https://images.unsplash.com/photo-1624140716840-5d89f311f500", word: "argaz" }, // Man
-             { src: "https://images.unsplash.com/photo-1667132970685-a2109a3ed00d", word: "tameṭṭut" }, // Woman
-             { src: "https://images.unsplash.com/photo-1620436226596-46a359a295bc", word: "aqcic" }, // Boy
-             { src: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9", word: "taqcict" }, // Girl
-             { src: "https://images.unsplash.com/photo-1587040273238-9ba47c714796", word: "amɣar" }, // Elder man
-             { src: "https://images.unsplash.com/photo-1498757581981-8ddb3c0b9b07", word: "tamɣart" }, // Elder woman
-             { src: "https://images.unsplash.com/photo-1482235225574-c37692835cf3", word: "baba" }, // Dady
-             { src: "https://images.unsplash.com/photo-1542385151-efd9000785a0", word: "yemma" }, // Mom
-             { src: "https://images.unsplash.com/photo-1559734840-f9509ee5677f", word: "tawacult" } // Familly
-        ];
-        const distractors = ["azul", "amek", "tettiliḍ"]; // Non-applicable words
-        let imageGrid = document.getElementById('imageGrid');
-        let wordList = document.getElementById('wordList');
-        let controls = document.getElementById('controls');
-        let completedCells = 0;
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-        function createGame() {
-            // Shuffle data and add distractors
-            let allWords = [...data.map(item => item.word), ...distractors];
-            allWords = shuffleArray(allWords);
-            // Create image grid
-            data.forEach((item) => {
-                let cell = document.createElement('div');
-                cell.classList.add('cell');
-                let img = document.createElement('img');
-                img.src = item.src;
-                img.alt = "Image";
-                let feedbackContainer = document.createElement('div');
-                feedbackContainer.classList.add('feedback-container');
-                let wordLabel = document.createElement('span');
-                wordLabel.textContent = ""; // Initially empty
-                wordLabel.style.flexGrow = 1;
-                let feedback = document.createElement('span');
-                feedback.classList.add('feedback');
-                feedbackContainer.appendChild(wordLabel);
-                feedbackContainer.appendChild(feedback);
-                cell.dataset.correctWord = item.word; // Store correct word as data attribute
-                cell.appendChild(img);
-                cell.appendChild(feedbackContainer);
-                cell.addEventListener('dragover', (e) => e.preventDefault());
-                cell.addEventListener('drop', (e) => handleDrop(e, cell, wordLabel, feedback));
-                imageGrid.appendChild(cell);
-            });
-            // Create word list
-            allWords.forEach(word => {
-                let button = document.createElement('button');
-                button.textContent = word;
-                button.classList.add('word-button');
-                button.draggable = true;
-                // Add click event to play audio
-                button.onclick = () => playAudio(`audio/${word}.ogg`);
-                button.addEventListener('dragstart', (e) => handleDragStart(e, button));
-                button.addEventListener('dragend', () => handleDragEnd(button));
-                wordList.appendChild(button);
-            });
-        }
-        function handleDragStart(e, button) {
-            e.dataTransfer.setData('text/plain', button.textContent);
-            button.classList.add('dragging');
-        }
-        function handleDragEnd(button) {
-            button.classList.remove('dragging');
-        }
-        function handleDrop(e, cell, wordLabel, feedback) {
-            e.preventDefault();
-            const word = e.dataTransfer.getData('text/plain');
-            const correctWord = cell.dataset.correctWord;
-            // Clear previous feedback
-            feedback.textContent = "";
-            wordLabel.textContent = "";
-            // Update word label and feedback
-            wordLabel.textContent = word;
-            if (word === correctWord) {
-                feedback.textContent = "✔";
-                feedback.classList.add('correct');
-                feedback.classList.remove('incorrect');
-            } else {
-                feedback.textContent = "✘";
-                feedback.classList.add('incorrect');
-                feedback.classList.remove('correct');
-            }
-            // Increment interaction counter
-            completedCells++;
-            // Show controls when all cells are interacted with
-            if (completedCells === data.length) {
-                setTimeout(() => {
-                    controls.classList.remove('hidden');
-                }, 500);
-            }
-        }
-        function resetGame() {
-            imageGrid.innerHTML = '';
-            wordList.innerHTML = '';
-            controls.classList.add('hidden');
-            completedCells = 0;
-            createGame();
-        }
-        function exitGame() {
-            if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
-                try {
-                    window.close();
-                } catch (error) {
-                    alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
-                }
-            }
-        }
-        // Audio player functionality
-        function playAudio(audioFilePath) {
-            const audioPlayer = document.getElementById('gameAudio');
-            audioPlayer.src = audioFilePath; // Set the audio file source
-            audioPlayer.play().catch(error => {
-                console.error("Error playing audio:", error);
-            });
-        }
-        // Add event listener to the "Launch Game" button
-        document.getElementById('launchGameButton').addEventListener('click', () => {
-            openFullscreen(); // Enter fullscreen mode
-            document.getElementById('gameContainer').classList.remove('hidden'); // Show the game
-            document.getElementById('launchGameButton').style.display = 'none'; // Hide the launch button
-            createGame(); // Initialize the game
-        });
-    </script>
-    <!-- Hidden audio player -->
-    <audio id="gameAudio" preload="auto">
-        <source src="audio/word.ogg" type="audio/ogg">
-        <source src="audio/word.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    }
+}
+
+// Audio player functionality
+function playAudio(audioFilePath) {
+    const audioPlayer = document.getElementById('gameAudio');
+    audioPlayer.src = audioFilePath; // Set the audio file source
+    audioPlayer.play().catch(error => {
+        console.error("Error playing audio:", error);
+    });
+}
+
+// Add event listener to the "Launch Game" button
+document.getElementById('launchGameButton').addEventListener('click', () => {
+    openFullscreen(); // Enter fullscreen mode
+    document.getElementById('gameContainer').classList.remove('hidden'); // Show the game
+    document.getElementById('launchGameButton').style.display = 'none'; // Hide the launch button
+    createGame(); // Initialize the game
+});
+</script>
+<!-- Hidden audio player -->
+<audio id="gameAudio" preload="auto">
+    <source src="audio/word.ogg" type="audio/ogg">
+    <source src="audio/word.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
 </body>
 </html>

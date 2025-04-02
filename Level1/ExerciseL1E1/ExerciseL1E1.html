@@ -1,432 +1,539 @@
 <!DOCTYPE html>
 <html lang="kab">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Almad n teqbaylit s tugniwin - Apprendre taqbaylit avec des images</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .subtitle {
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-        }
-
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 95%;
-            max-width: 600px;
-            box-sizing: border-box;
-        }
-
-        .image-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        .cell {
-            position: relative;
-            width: calc(50% - 5px);
-            height: auto;
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s;
-            box-sizing: border-box;
-            max-width: 200px;
-        }
-
-        .example-image-cell {
-            width: calc(50% - 5px);
-            height: auto;
-            max-width: 200px;
-            box-sizing: border-box;
-        }
-
-        .cell img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .word-list {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        .word-button {
-            padding: 8px 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            user-select: none;
-            font-size: 14px;
-            margin: 5px;
-            box-sizing: border-box;
-        }
-
-        .word-button:hover {
-            background-color: #0056b3;
-        }
-
-        .controls {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            box-sizing: border-box;
-        }
-
-        .controls button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            box-sizing: border-box;
-        }
-
-        .controls button.play-again {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .controls button.play-again:hover {
-            background-color: #218838;
-        }
-
-        .controls button.exit {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .controls button.exit:hover {
-            background-color: #c82333;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .instructions {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #555;
-            text-align: center;
-        }
-
-        .credit-note {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-        }
-
-        #launchGameButton {
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        #launchGameButton:hover {
-            background-color: #0056b3;
-        }
-
-        #nextButton {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            box-sizing: border-box;
-        }
-
-        #nextButton:hover {
-            background-color: #218838;
-        }
-
-        /* Dynamic Letter Animation */
-        .dynamic-letter {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 10px;
-            font-weight: bold;
-            color: #007bff;
-            animation: growAndSwirl 0.5s forwards;
-            box-sizing: border-box;
-        }
-
-        @keyframes growAndSwirl {
-            from {
-                font-size: 10px;
-                transform: rotate(0deg);
-            }
-
-            to {
-                font-size: 70px;
-                transform: rotate(360deg);
-            }
-        }
-
-        .fade-in {
-            animation: fadeInEffect 0.5s forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeInEffect {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Media Queries for Responsiveness */
-
-        @media screen and (max-width: 480px) {
-            .cell,
-            .example-image-cell {
-                width: 100%;
-                max-width: none;
-            }
-
-            .word-button {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-
-            .controls button {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
-        }
-
-        @media screen and (min-width: 481px) and (max-width: 768px) {
-
-            .cell,
-            .example-image-cell {
-                width: calc(50% - 5px);
-                max-width: none;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almad n teqbaylit s tugniwin - Apprendre taqbaylit avec des images</title>
+<style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+    margin: 0;
+}
+h1 {
+    margin-bottom: 20px;
+}
+.subtitle {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 800px;
+}
+.image-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.cell {
+    position: relative;
+    width: 160px;
+    height: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.example-image-cell {
+    width: 180px;
+    height: 180px;
+}
+.cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.word-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.word-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    user-select: none;
+    font-size: 16px;
+}
+.word-button:hover {
+    background-color: #0056b3;
+}
+.controls {
+    margin-top: 20px;
+}
+.controls button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.controls button.play-again {
+    background-color: #28a745;
+    color: white;
+}
+.controls button.play-again:hover {
+    background-color: #218838;
+}
+.controls button.exit {
+    background-color: #dc3545;
+    color: white;
+}
+.controls button.exit:hover {
+    background-color: #c82333;
+}
+.hidden {
+    display: none;
+}
+.instructions {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+.credit-note {
+    margin-top: 10px;
+    font-size: 12px; /* Decreased font size for credit note */
+    color: #888;
+    text-align: center;
+}
+#launchGameButton {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#launchGameButton:hover {
+    background-color: #0056b3;
+}
+#nextButton {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#nextButton:hover {
+    background-color: #218838;
+}
+/* Dynamic Letter Animation */
+.dynamic-letter {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px; /* Start small */
+    font-weight: bold;
+    color: #007bff;
+    animation: growAndSwirl 0.5s forwards;
+}
+@keyframes growAndSwirl {
+    from {
+        font-size: 10px;
+        transform: rotate(0deg);
+    }
+    to {
+        font-size: 70px; /* End large */
+        transform: rotate(360deg);
+    }
+}
+.fade-in {
+    animation: fadeInEffect 0.5s forwards;
+    opacity: 0;
+}
+@keyframes fadeInEffect {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style>
 </head>
-
 <body>
-    <h1>TAFRARA n TIRA</h1>
-    <div class="subtitle">Agemmayt</div>
-    <button id="launchGameButton">URAR</button>
-    <div class="game-container hidden" id="gameContainer">
-        <div class="image-grid" id="imageGrid">
-            <div class="cell">
-                <div id="letter-dynamic" class="dynamic-letter"></div>
-            </div>
-            <div class="cell example-image-cell">
-                <img id="example-image" src="" alt="Example Object" class="fade-in">
-            </div>
+<h1>TAFRARA n TIRA</h1>
+<div class="subtitle">Agemmayt</div>
+<!-- Launch Game Button -->
+<button id="launchGameButton">URAR</button>
+<div class="game-container hidden" id="gameContainer">
+    <div class="image-grid" id="imageGrid">
+        <div class="cell">
+            <div id="letter-dynamic" class="dynamic-letter"></div>
         </div>
-        <div class="word-list" id="wordList"></div>
-        <div class="controls" id="controls">
-            <button id="nextButton" onclick="nextDisplay()">DDU</button>
-            <button class="play-again hidden" onclick="resetGame()">Rnu Urar</button>
-            <button class="exit hidden" onclick="exitGame()">Ffeɣ</button>
+        <div class="cell example-image-cell">
+            <img id="example-image" src="" alt="Example Object" class="fade-in">
         </div>
     </div>
-    <div class="instructions">
-        Tekki ɣef wawal ad as-tesleḍ.
+    <div class="word-list" id="wordList"></div>
+    <div class="controls" id="controls">
+        <button id="nextButton" onclick="nextDisplay()">DDU</button>
+        <button class="play-again hidden" onclick="resetGame()">Rnu Urar</button>
+        <button class="exit hidden" onclick="exitGame()">Ffeɣ</button>
     </div>
-    <div class="credit-note">
-        Tugniwin: <a href="https://unsplash.com" target="_blank" style="color:#888; text-decoration:none;">Unsplash</a>
-    </div>
-    <script>
-        let currentDisplay = 0;
+</div>
+<div class="instructions">
+    Tekki ɣef wawal ad as-tesleḍ.
+</div>
+<div class="credit-note">
+    Tugniwin: <a href="https://unsplash.com" target="_blank" style="color:#888; text-decoration:none;">Unsplash</a>
+</div>
+<script>
+let currentDisplay = 0;
 
-        const displays = [
-            {
-                letter: "Aaⴰ",
-                exampleImage: "https://images.unsplash.com/photo-1711548462317-e412ed1a5a19",
-                words: ["ya", "azger"],
-                audios: ["audio/ya.ogg", "audio/azger.ogg"]
-            },
-            {
-                letter: "Bbⴱ",
-                exampleImage: "https://images.unsplash.com/photo-1581747631537-9f95efe71532",
-                words: ["yab", "burebbu"],
-                audios: ["audio/yabb.ogg", "audio/burebbu.ogg"]
-            },
-            {
-                letter: "Bbⴱ",
-                exampleImage: "https://images.unsplash.com/photo-1538099384082-c33e0239c424",
-                words: ["yab", "abaṛeɣ"],
-                audios: ["audio/yab.ogg", "audio/abaṛeɣ.ogg"]
-            },
-            {
-                letter: "Ccⵛ",
-                exampleImage: "https://images.unsplash.com/photo-1532119421444-cb013aaed2e7",
-                words: ["yac", "ccita"],
-                audios: ["audio/yac.ogg", "audio/ccita.ogg"]
-            },
-            {
-                letter: "Čč",
-                exampleImage: "https://images.unsplash.com/photo-1547514701-42782101795e",
-                words: ["yač", "ččina"],
-                audios: ["audio/yač.ogg", "audio/ččina.ogg"]
-            },
-            {
-                letter: "Ɛɛⵄ",
-                exampleImage: "https://images.unsplash.com/photo-1558547752-b3d6dfa5eb68",
-                words: ["yaɛ", "lɛecc"],
-                audios: ["audio/yaɛ.ogg", "audio/lɛecc.ogg"]
-            }
-        ];
+const displays = [
+    {
+        letter: "Aaⴰ",
+        exampleImage: "https://images.unsplash.com/photo-1711548462317-e412ed1a5a19",
+        words: ["ya", "azger"],
+        audios: ["audio/ya.ogg", "audio/azger.ogg"]
+    },
+    {
+        letter: "Bbⴱ",
+        exampleImage: "https://images.unsplash.com/photo-1581747631537-9f95efe71532",
+        words: ["yab", "burebbu"],
+        audios: ["audio/yabb.ogg", "audio/burebbu.ogg"]
+    },
+    {
+        letter: "Bbⴱ",
+        exampleImage: "https://images.unsplash.com/photo-1538099384082-c33e0239c424",
+        words: ["yab", "abaṛeɣ"],
+        audios: ["audio/yab.ogg", "audio/abaṛeɣ.ogg"]
+    },
+    {
+        letter: "Ccⵛ",
+        exampleImage: "https://images.unsplash.com/photo-1532119421444-cb013aaed2e7",
+        words: ["yac", "ccita"],
+        audios: ["audio/yac.ogg", "audio/ccita.ogg"]
+    },
+    {
+        letter: "Čč",
+        exampleImage: "https://images.unsplash.com/photo-1547514701-42782101795e",
+        words: ["yač", "ččina"],
+        audios: ["audio/yač.ogg", "audio/ččina.ogg"]
+    },
+    {
+        letter: "Ddⴷ",
+        exampleImage: "https://images.unsplash.com/photo-1486286701208-1d58e9338013",
+        words: ["yad", "ddabex"],
+        audios: ["audio/yadd.ogg", "audio/ddabex.ogg"]
+    },
+    {
+        letter: "Ddⴷ",
+        exampleImage: "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5",
+        words: ["yad", "adrar"],
+        audios: ["audio/yad.ogg", "audio/adrar.ogg"]
+    },
+    {
+        letter: "Ḍḍⴹ",
+        exampleImage: "https://images.unsplash.com/photo-1602703291624-d470dbd741a7",
+        words: ["yaḍ", "aḍad"],
+        audios: ["audio/yaḍ.ogg", "audio/aḍad.ogg"]
+    },
+    {
+        letter: "Eeⴻ",
+        exampleImage: "https://images.unsplash.com/photo-1590668468552-d87c3a011afb",
+        words: ["yey", "izem"],
+        audios: ["audio/yey.ogg", "audio/izem.ogg"]
+    },
+    {
+        letter: "Ffⴼ",
+        exampleImage: "https://images.unsplash.com/photo-1514756331096-242fdeb70d4a",
+        words: ["yaf", "ifires"],
+        audios: ["audio/yaf.ogg", "audio/ifires.ogg"]
+    },
+    {
+        letter: "Ggⴳ",
+        exampleImage: "https://images.unsplash.com/photo-1620436226596-46a359a295bc",
+        words: ["yag", "agrud"],
+        audios: ["audio/yagg.ogg", "audio/agrud.ogg"]
+    },
+    {
+        letter: "Ggⴳ",
+        exampleImage: "https://images.unsplash.com/photo-1593179449458-e0d43d512551",
+        words: ["yag", "agmar"],
+        audios: ["audio/yag.ogg", "audio/agmar.ogg"]
+    },
+    {
+        letter: "Ǧǧ",
+        exampleImage: "https://images.unsplash.com/photo-1569614184887-cfc6b82d4a08",
+        words: ["yaǧ", "aǧaǧiḥ"],
+        audios: ["audio/yaǧ.ogg", "audio/aǧaǧiḥ.ogg"]
+    },
+    {
+        letter: "Hhⵀ",
+        exampleImage: "https://images.unsplash.com/photo-1727303600938-b8c884e41727",
+        words: ["yah", "ahiduṛ"],
+        audios: ["audio/yah.ogg", "audio/ahiduṛ.ogg"]
+    },
+    {
+        letter: "Ḥḥⵃ",
+        exampleImage: "https://images.unsplash.com/photo-1524593313283-1e092f06b2f0",
+        words: ["yaḥ", "iḥbuben"],
+        audios: ["audio/yaḥ.ogg", "audio/iḥbuben.ogg"]
+    },
+    {
+        letter: "Iiⵉ",
+        exampleImage: "https://images.unsplash.com/photo-1596296455028-bb216ae02ff7",
+        words: ["yi", "izi"],
+        audios: ["audio/yi.ogg", "audio/izi.ogg"]
+    },
+    {
+        letter: "Jjⵊ",
+        exampleImage: "https://images.unsplash.com/photo-1558451606-6d2e2b2c3f6d",
+        words: ["yaj", "ajaɣiɣ"],
+        audios: ["audio/yaj.ogg", "audio/ajaɣiɣ.ogg"]
+    },
+    {
+        letter: "Kkⴽ",
+        exampleImage: "https://images.unsplash.com/photo-1575399872095-9363bf262e64",
+        words: ["yak", "kawkaw"],
+        audios: ["audio/yakk.ogg", "audio/kawkaw.ogg"]
+    },
+    {
+        letter: "Kkⴽ",
+        exampleImage: "https://images.unsplash.com/photo-1516031580674-b9de79006c60",
+        words: ["yak", "takerrust"],
+        audios: ["audio/yak.ogg", "audio/takerrust.ogg"]
+    },
+    {
+        letter: "Llⵍ",
+        exampleImage: "https://images.unsplash.com/photo-1508779018996-601e37fa274e",
+        words: ["yal", "lluz"],
+        audios: ["audio/yal.ogg", "audio/lluz.ogg"]
+    },
+    {
+        letter: "Mmⵎ",
+        exampleImage: "https://images.unsplash.com/photo-1495360010541-f48722b34f7d",
+        words: ["yam", "amcic"],
+        audios: ["audio/yam.ogg", "audio/amcic.ogg"]
+    },
+    {
+        letter: "Nnⵏ",
+        exampleImage: "https://images.unsplash.com/photo-1605369179729-4036b4d829cb",
+        words: ["yan", "inisi"],
+        audios: ["audio/yan.ogg", "audio/inisi.ogg"]
+    },
+    {
+        letter: "Ɣɣⵖ",
+        exampleImage: "https://images.unsplash.com/photo-1509440159596-0249088772ff",
+        words: ["yaɣ", "aɣrum"],
+        audios: ["audio/yaɣ.ogg", "audio/aɣrum.ogg"]
+    },
+    {
+        letter: "Qqⵇ",
+        exampleImage: "https://images.unsplash.com/photo-1585483266684-b2f19ff1ba1d",
+        words: ["yaq", "aqabac"],
+        audios: ["audio/yaq.ogg", "audio/aqabac.ogg"]
+    },
+    {
+        letter: "Rrⵔ",
+        exampleImage: "https://images.unsplash.com/photo-1586458873452-7bdd7401eabd",
+        words: ["yar", "arelluc"],
+        audios: ["audio/yar.ogg", "audio/arelluc.ogg"]
+    },
+    {
+        letter: "Ṛṛⵕ",
+        exampleImage: "https://images.unsplash.com/photo-1594660159516-04f8ec399b30",
+        words: ["yaṛ", "ṛṛsen"],
+        audios: ["audio/yaṛ.ogg", "audio/ṛṛsen.ogg"]
+    },
+    {
+        letter: "Ssⵙ",
+        exampleImage: "https://images.unsplash.com/photo-1671056434397-e1799d2e1c7b",
+        words: ["yas", "ssiwan"],
+        audios: ["audio/yas.ogg", "audio/ssiwan.ogg"]
+    },
+    {
+        letter: "Ṣṣⵚ",
+        exampleImage: "https://images.unsplash.com/photo-1605264964528-06403738d6dc",
+        words: ["yaṣ", "ṣṣabun"],
+        audios: ["audio/yaṣ.ogg", "audio/ṣṣabun.ogg"]
+    },
+    {
+        letter: "Ttⵜ",
+        exampleImage: "https://images.unsplash.com/photo-1568654077602-2303b26c895d",
+        words: ["yat", "ttut"],
+        audios: ["audio/yatt.ogg", "audio/ttut.ogg"]
+    },
+    {
+        letter: "Ttⵜ",
+        exampleImage: "https://images.unsplash.com/photo-1635956563341-dd023a9c466f",
+        words: ["yat", "timmi"],
+        audios: ["audio/yat.ogg", "audio/timmi.ogg"]
+    },
+    {
+        letter: "Ṭṭⵟ",
+        exampleImage: "https://images.unsplash.com/photo-1549849171-09f62448709e",
+        words: ["yaṭ", "iṭij"],
+        audios: ["audio/yaṭ.ogg", "audio/iṭij.ogg"]
+    },
+    {
+        letter: "Uuⵓ",
+        exampleImage: "https://images.unsplash.com/photo-1553264701-d138db4fd5d4",
+        words: ["yu", "bururu"],
+        audios: ["audio/yu.ogg", "audio/bururu.ogg"]
+    },
+    {
+        letter: "Wwⵡ",
+        exampleImage: "https://images.unsplash.com/photo-1592331753290-91e0de78233f",
+        words: ["yaw", "aweṭṭuf"],
+        audios: ["audio/yaw.ogg", "audio/aweṭṭuf.ogg"]
+    },
+    {
+        letter: "Xxⵅ",
+        exampleImage: "https://images.unsplash.com/photo-1518780664697-55e3ad937233",
+        words: ["yax", "axxam"],
+        audios: ["audio/yax.ogg", "audio/axxam.ogg"]
+    },
+    {
+        letter: "Yyⵢ",
+        exampleImage: "https://images.unsplash.com/photo-1554740760-5db7aca3ec66",
+        words: ["yay", "ayaziḍ"],
+        audios: ["audio/yay.ogg", "audio/ayaziḍ.ogg"]
+    },
+    {
+        letter: "Zzⵣ",
+        exampleImage: "https://images.unsplash.com/photo-1628269165057-6bd6c5207760",
+        words: ["yaz", "izirdiw"],
+        audios: ["audio/yaz.ogg", "audio/izirdiw.ogg"]
+    },
+    {
+        letter: "Ẓẓⵥ",
+        exampleImage: "https://images.unsplash.com/photo-1540525080980-b97c4be3c779",
+        words: ["yaẓ", "iẓuran"],
+        audios: ["audio/yaẓ.ogg", "audio/iẓuran.ogg"]
+    },
+    {
+        letter: "Ɛɛⵄ",
+        exampleImage: "https://images.unsplash.com/photo-1558547752-b3d6dfa5eb68",
+        words: ["yaɛ", "lɛecc"],
+        audios: ["audio/yaɛ.ogg", "audio/lɛecc.ogg"]
+    }
+];
 
 
-        function playAudio(audioFilePath) {
-            const audioPlayer = document.getElementById('gameAudio');
-            audioPlayer.src = audioFilePath;
-            audioPlayer.play().catch(error => {
-                console.error("Error playing audio:", error);
-            });
+function playAudio(audioFilePath) {
+    const audioPlayer = document.getElementById('gameAudio');
+    audioPlayer.src = audioFilePath;
+    audioPlayer.play().catch(error => {
+        console.error("Error playing audio:", error);
+    });
+}
+
+function nextDisplay() {
+    currentDisplay++;
+    if (currentDisplay < displays.length) {
+        updateDisplay();
+    } else {
+        document.getElementById('nextButton').classList.add('hidden');
+        document.querySelector('.play-again').classList.remove('hidden');
+        document.querySelector('.exit').classList.remove('hidden');
+    }
+}
+
+function updateDisplay() {
+    const display = displays[currentDisplay];
+    const letterDynamicElement = document.getElementById('letter-dynamic');
+    const exampleImageElement = document.getElementById('example-image');
+
+    // Reset animations
+    letterDynamicElement.classList.remove('dynamic-letter');
+    exampleImageElement.classList.remove('fade-in');
+
+    // Trigger reflow to restart animations
+    void letterDynamicElement.offsetWidth;
+    void exampleImageElement.offsetWidth;
+
+    // Update letter and image
+    letterDynamicElement.textContent = display.letter;
+    letterDynamicElement.classList.add('dynamic-letter');
+    exampleImageElement.src = display.exampleImage;
+
+    // Reapply fade-in animation
+    exampleImageElement.classList.add('fade-in');
+
+    // Update word buttons
+    const wordList = document.getElementById('wordList');
+    wordList.innerHTML = '';
+    display.words.forEach((word, index) => {
+        const button = document.createElement('button');
+        button.textContent = word;
+        button.classList.add('word-button');
+        button.onclick = () => playAudio(display.audios[index]);
+        wordList.appendChild(button);
+    });
+}
+
+function resetGame() {
+    currentDisplay = 0;
+    document.getElementById('nextButton').classList.remove('hidden');
+    document.querySelector('.play-again').classList.add('hidden');
+    document.querySelector('.exit').classList.add('hidden');
+    updateDisplay();
+}
+
+function exitGame() {
+    if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
+        try {
+            window.close();
+        } catch (error) {
+            alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
         }
+    }
+}
 
-        function nextDisplay() {
-            currentDisplay++;
-            if (currentDisplay < displays.length) {
-                updateDisplay();
-            } else {
-                document.getElementById('nextButton').classList.add('hidden');
-                document.querySelector('.play-again').classList.remove('hidden');
-                document.querySelector('.exit').classList.remove('hidden');
-            }
-        }
+// Fullscreen function
+function openFullscreen() {
+    const elem = document.documentElement; // Targets the entire page
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { // Firefox
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE/Edge
+        elem.msRequestFullscreen();
+    }
+}
 
-        function updateDisplay() {
-            const display = displays[currentDisplay];
-            const letterDynamicElement = document.getElementById('letter-dynamic');
-            const exampleImageElement = document.getElementById('example-image');
-
-            // Reset animations
-            letterDynamicElement.classList.remove('dynamic-letter');
-            exampleImageElement.classList.remove('fade-in');
-
-            // Trigger reflow to restart animations
-            void letterDynamicElement.offsetWidth;
-            void exampleImageElement.offsetWidth;
-
-            // Update letter and image
-            letterDynamicElement.textContent = display.letter;
-            letterDynamicElement.classList.add('dynamic-letter');
-            exampleImageElement.src = display.exampleImage;
-
-            // Reapply fade-in animation
-            exampleImageElement.classList.add('fade-in');
-
-            // Update word buttons
-            const wordList = document.getElementById('wordList');
-            wordList.innerHTML = '';
-            display.words.forEach((word, index) => {
-                const button = document.createElement('button');
-                button.textContent = word;
-                button.classList.add('word-button');
-                button.onclick = () => playAudio(display.audios[index]);
-                wordList.appendChild(button);
-            });
-        }
-
-        function resetGame() {
-            currentDisplay = 0;
-            document.getElementById('nextButton').classList.remove('hidden');
-            document.querySelector('.play-again').classList.remove('hidden');
-            document.querySelector('.exit').classList.remove('hidden');
-            updateDisplay();
-        }
-
-        function exitGame() {
-            if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
-                try {
-                    window.close();
-                } catch (error) {
-                    alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
-                }
-            }
-        }
-
-        // Fullscreen function
-        function openFullscreen() {
-            const elem = document.documentElement; // Targets the entire page
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
-            }
-        }
-
-        // Add event listener to the "Launch Game" button
-        document.getElementById('launchGameButton').addEventListener('click', () => {
-            openFullscreen(); // Enter fullscreen mode
-            document.getElementById('gameContainer').classList.remove('hidden'); // Show the game
-            document.getElementById('launchGameButton').style.display = 'none'; // Hide the launch button
-            updateDisplay(); // Initialize the first display
-        });
-    </script>
-    <audio id="gameAudio" preload="auto"></audio>
+// Add event listener to the "Launch Game" button
+document.getElementById('launchGameButton').addEventListener('click', () => {
+    openFullscreen(); // Enter fullscreen mode
+    document.getElementById('gameContainer').classList.remove('hidden'); // Show the game
+    document.getElementById('launchGameButton').style.display = 'none'; // Hide the launch button
+    updateDisplay(); // Initialize the first display
+});
+</script>
+<!-- Hidden audio player -->
+<audio id="gameAudio" preload="auto"></audio>
 </body>
-
 </html>

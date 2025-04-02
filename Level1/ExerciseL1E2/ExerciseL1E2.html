@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almad n teqbaylit s tugniwin - Apprendre taqbaylit avec des mots</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+    margin: 0;
+}
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+.category-title {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+#launchWordIntroButton {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#launchWordIntroButton:hover {
+    background-color: #0056b3;
+}
+.word-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 80%;
+    max-width: 600px;
+}
+.translation {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+.kabyle-buttons {
+    display: flex;
+    gap: 10px;
+}
+.kabyle-button {
+    padding: 10px 20px;
+    font-size: 24px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.kabyle-button.small {
+    font-size: 16px;
+}
+.next-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.next-button:hover {
+    background-color: #218838;
+}
+.hidden {
+    display: none;
+}
+.instructions {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+}
+.play-again-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+.play-again-button:hover {
+    background-color: #218838;
+}
+</style>
+</head>
+<body>
+<h1>Lmed Taqbaylit s Tugniwin</h1>
+<div class="category-title">Imdanen</div>
+<!-- Launch Word Introduction Button -->
+<button id="launchWordIntroButton">URAR</button>
+<div class="word-container hidden" id="wordIntroContainer">
+    <div class="translation" id="translation"></div>
+    <div class="kabyle-buttons">
+        <button class="kabyle-button" id="normalSpeedButton"></button>
+        <button class="kabyle-button small" id="slowSpeedButton"></button>
+    </div>
+    <button class="next-button hidden" id="nextButton">DDU</button>
+</div>
+<div class="instructions">
+    Tekki ɣef wawal ad as-tesleḍ neɣ DDU ɣer sdat.
+</div>
+<script>
+// Data for word introduction
+const wordsData = [
+    { kabyle: "argaz", french: "Homme", english: "Man" },
+    { kabyle: "tameṭṭut", french: "Femme", english: "Woman" },
+    { kabyle: "aqcic", french: "Garçon", english: "Boy" },
+    { kabyle: "taqcict", french: "Fille", english: "Girl" },
+    { kabyle: "amɣar", french: "Vieil homme", english: "Elder man" },
+    { kabyle: "tamɣart", french: "Vieille femme", english: "Elder woman" }
+];
+let currentWordIndex = 0;
+
+function showNextWord() {
+    const wordData = wordsData[currentWordIndex];
+    document.getElementById('translation').textContent = `Français: ${wordData.french}\nEnglish: ${wordData.english}`;
+    document.getElementById('normalSpeedButton').textContent = wordData.kabyle;
+    document.getElementById('slowSpeedButton').textContent = wordData.kabyle;
+    document.getElementById('nextButton').classList.add('hidden');
+    document.getElementById('normalSpeedButton').onclick = () => playAudio(`audio/${wordData.kabyle}.ogg`, 1);
+    document.getElementById('slowSpeedButton').onclick = () => playAudio(`audio/${wordData.kabyle}.ogg`, 0.7);
+
+    // Automatically play audio after 1 second
+    setTimeout(() => {
+        playAudio(`audio/${wordData.kabyle}.ogg`, 1);
+        document.getElementById('nextButton').classList.remove('hidden');
+    }, 1000);
+}
+
+function playAudio(audioFilePath, playbackRate = 1) {
+    const audioPlayer = document.getElementById('wordAudio');
+    audioPlayer.src = audioFilePath; // Set the audio file source
+    audioPlayer.playbackRate = playbackRate;
+    audioPlayer.play().catch(error => {
+        console.error("Error playing audio:", error);
+    });
+}
+
+document.getElementById('launchWordIntroButton').addEventListener('click', () => {
+    document.getElementById('wordIntroContainer').classList.remove('hidden');
+    document.getElementById('launchWordIntroButton').style.display = 'none';
+    showNextWord();
+});
+
+document.getElementById('nextButton').addEventListener('click', () => {
+    currentWordIndex++;
+    if (currentWordIndex < wordsData.length) {
+        showNextWord();
+    } else {
+        // Show Play Again and DDU buttons
+        document.getElementById('nextButton').classList.add('hidden');
+        const playAgainButton = document.createElement('button');
+        playAgainButton.textContent = "Rnu Urar";
+        playAgainButton.classList.add('play-again-button');
+        playAgainButton.onclick = () => resetGame();
+
+        const dduButton = document.createElement('button');
+        dduButton.textContent = "DDU";
+        dduButton.classList.add('play-again-button');
+        dduButton.onclick = () => proceedToPictureQuiz();
+
+        document.getElementById('wordIntroContainer').appendChild(playAgainButton);
+        document.getElementById('wordIntroContainer').appendChild(dduButton);
+    }
+});
+
+function resetGame() {
+    currentWordIndex = 0;
+    document.getElementById('wordIntroContainer').innerHTML = `
+        <div class="translation" id="translation"></div>
+        <div class="kabyle-buttons">
+            <button class="kabyle-button" id="normalSpeedButton"></button>
+            <button class="kabyle-button small" id="slowSpeedButton"></button>
+        </div>
+        <button class="next-button hidden" id="nextButton">DDU</button>
+    `;
+    document.getElementById('nextButton').addEventListener('click', () => {
+        currentWordIndex++;
+        if (currentWordIndex < wordsData.length) {
+            showNextWord();
+        } else {
+            document.getElementById('nextButton').classList.add('hidden');
+            const playAgainButton = document.createElement('button');
+            playAgainButton.textContent = "Rnu Urar";
+            playAgainButton.classList.add('play-again-button');
+            playAgainButton.onclick = () => resetGame();
+
+            const dduButton = document.createElement('button');
+            dduButton.textContent = "DDU";
+            dduButton.classList.add('play-again-button');
+            dduButton.onclick = () => proceedToPictureQuiz();
+
+            document.getElementById('wordIntroContainer').appendChild(playAgainButton);
+            document.getElementById('wordIntroContainer').appendChild(dduButton);
+        }
+    });
+    showNextWord();
+}
+
+function proceedToPictureQuiz() {
+    window.location.href = 'ExerciseL1E2a.html'; // Redirect to the picture quiz script in the same folder
+}
+</script>
+<!-- Hidden audio player -->
+<audio id="wordAudio" preload="auto">
+    <source src="audio/word.ogg" type="audio/ogg">
+    <source src="audio/word.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+</body>
+</html>

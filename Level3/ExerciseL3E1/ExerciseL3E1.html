@@ -20,7 +20,7 @@
         }
         .subtitle {
             margin-bottom: 20px;
-            font-size: 18px;
+            font-size: 18px; /* Subtitle is slightly smaller than the main title */
             font-weight: bold;
             color: #333;
         }
@@ -32,25 +32,26 @@
             max-width: 800px;
         }
         .sentence-box {
-            margin: 10px 0;
-            text-align: center;
+            margin: 10px 0; /* Adds vertical spacing above and below the box */
+            text-align: center; /* Centers the content horizontally */
         }
         .word-button {
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            user-select: none;
+            padding: 15px; /* Increases the size of the button by adding space inside it */
+            font-size: 18px; /* Makes the text larger and more readable */
+            background-color: #007bff; /* Sets the background color to blue */
+            color: white; /* Sets the text color to white for contrast */
+            border: none; /* Removes the default button border */
+            border-radius: 10px; /* Rounds the corners of the button for a softer look */
+            cursor: pointer; /* Changes the mouse pointer to indicate the button is clickable */
+            text-align: center; /* Ensures the text inside the button is centered */
+            user-select: none; /* Prevents users from accidentally selecting the button text */
         }
         .controls {
             margin-top: 20px;
         }
         .controls button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 8px 16px; /* Reduced padding to make buttons slightly smaller */
+            font-size: 14px; /* Reduced font size to de-emphasize control buttons */
             margin: 0 10px;
             border: none;
             border-radius: 5px;
@@ -58,31 +59,31 @@
             transition: background-color 0.3s;
         }
         .controls button.play-again {
-            background-color: #28a745;
+            background-color: #28a745; /* Green for "Play Again" */
             color: white;
         }
         .controls button.play-again:hover {
             background-color: #218838;
         }
         .controls button.exit {
-            background-color: #dc3545;
+            background-color: #dc3545; /* Red for "Exit" */
             color: white;
         }
         .controls button.exit:hover {
             background-color: #c82333;
         }
         .hidden {
-            display: none;
+            display: none; /* Used to hide elements dynamically */
         }
         .instructions {
             margin-top: 20px;
-            font-size: 14px;
+            font-size: 14px; /* Instructions are smaller but still readable */
             color: #555;
         }
         #launchGameButton {
             padding: 15px 30px;
             font-size: 18px;
-            background-color: #007bff;
+            background-color: #007bff; /* Blue for the launch button */
             color: white;
             border: none;
             border-radius: 5px;
@@ -93,38 +94,51 @@
             background-color: #0056b3;
         }
         #listenUserButton {
-            background-color: #007bff;
+            background-color: #007bff; /* Same blue as other buttons */
             color: white;
         }
         #nextWordButton {
-            background-color: #77dd77; /* Lighter green */
+            background-color: #77dd77; /* Lighter green for "Next Word" */
             color: white;
         }
     </style>
 </head>
 <body>
     <h1>Lmed Taqbaylit s Wurar</h1>
-    <div class="subtitle">Aru Ini-d- Alaɣmu 3.1</div>
+    <div class="subtitle">Aru Ini-d - Alaɣmu 3.1</div>
+    <!-- Launch Game Button -->
     <button id="launchGameButton">URAR</button>
     <div class="game-container hidden" id="gameContainer">
+        <!-- French Sentence Display -->
         <div class="sentence-box" id="frenchSentence"></div>
+        <!-- English Sentence Display -->
         <div class="sentence-box" id="englishSentence"></div>
+        <!-- Kabyle Word/Sentence Button -->
         <div class="sentence-box">
             <button class="word-button" id="listenNativeButton">ferḥeɣ aṭas ass-a</button>
         </div>
+        <!-- Recording Controls -->
         <div class="controls">
+            <!-- Start Recording Button -->
             <button id="startRecordingButton" onclick="startRecording()">Sekles</button>
+            <!-- Stop Recording Button -->
             <button id="stopRecordingButton" onclick="stopRecording()" disabled>Bedd</button>
+            <!-- Listen to User Recording Button -->
             <button id="listenUserButton" onclick="listenToUserRecording()" disabled>Awal-ik</button>
         </div>
+        <!-- Next Word Button -->
         <div class="controls">
             <button id="nextWordButton" onclick="nextWord()">DDU</button>
         </div>
+        <!-- End-of-Cycle Controls -->
         <div class="controls hidden" id="cycleControls">
+            <!-- Restart Game Button -->
             <button class="play-again" onclick="resetGame()">Rnu Urar</button>
+            <!-- Exit Game Button -->
             <button class="exit" onclick="exitGame()">Ffeɣ</button>
         </div>
     </div>
+    <!-- Instructions -->
     <div class="instructions">
         Tekki tiqeffalin Awal, Sekles, Bedd, Sel, DDU
     </div>
@@ -137,61 +151,62 @@
 
         const words = [
             {
-		french: "Viel homme",
-		english: "Elder man",
-		kabyle: "amɣar",
-		audioFile: "audio/amɣar.ogg"
+                french: "Viel homme",
+                english: "Elder man",
+                kabyle: "amɣar",
+                audioFile: "audio/amɣar.ogg"
             },
             {
-		french: "Vielle femme",
-		english: "Elder woman",
-		kabyle: "tamɣart",
-		audioFile: "audio/tamɣart.ogg"
+                french: "Vielle femme",
+                english: "Elder woman",
+                kabyle: "tamɣart",
+                audioFile: "audio/tamɣart.ogg"
             },
             {
-		french: "Papa",
-		english: "Dady",
-		kabyle: "baba",
-		audioFile: "audio/baba.ogg"
+                french: "Papa",
+                english: "Dady",
+                kabyle: "baba",
+                audioFile: "audio/baba.ogg"
             },
             {
-		french: "Homme",
-		english: "Man",
-		kabyle: "argaz",
-		audioFile: "audio/argaz.ogg"
+                french: "Homme",
+                english: "Man",
+                kabyle: "argaz",
+                audioFile: "audio/argaz.ogg"
             },
             {
-		french: "Femme",
-		english: "Woman",
-		kabyle: "tameṭṭut",
-		audioFile: "audio/tameṭṭut.ogg"
+                french: "Femme",
+                english: "Woman",
+                kabyle: "tameṭṭut",
+                audioFile: "audio/tameṭṭut.ogg"
             },
             {
-		french: "Garçon",
-		english: "Boy",
-		kabyle: "aqcic",
-		audioFile: "audio/aqcic.ogg"
+                french: "Garçon",
+                english: "Boy",
+                kabyle: "aqcic",
+                audioFile: "audio/aqcic.ogg"
             },
             {
-		french: "Fille",
-		english: "Girl",
-		kabyle: "taqcict",
-		audioFile: "audio/taqcict.ogg"
+                french: "Fille",
+                english: "Girl",
+                kabyle: "taqcict",
+                audioFile: "audio/taqcict.ogg"
             },
             {
-		french: "Maman",
-		english: "Mom",
-		kabyle: "yemma",
-		audioFile: "audio/yemma.ogg"
+                french: "Maman",
+                english: "Mom",
+                kabyle: "yemma",
+                audioFile: "audio/yemma.ogg"
             },
             {
-		french: "Famille",
-		english: "Familly",
-		kabyle: "tawacult",
-		audioFile: "audio/tawacult.ogg"
+                french: "Famille",
+                english: "Family",
+                kabyle: "tawacult",
+                audioFile: "audio/tawacult.ogg"
             }
         ];
 
+        // Function to enter fullscreen mode
         function openFullscreen() {
             const elem = document.documentElement;
             if (elem.requestFullscreen) {
@@ -205,6 +220,7 @@
             }
         }
 
+        // Function to load a word/sentence
         function loadWord(index) {
             const word = words[index];
             document.getElementById('frenchSentence').textContent = `Français: ${word.french}`;
@@ -215,6 +231,7 @@
             document.getElementById('listenUserButton').disabled = true;
         }
 
+        // Function to start recording
         function startRecording() {
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
                 mediaRecorder = new MediaRecorder(stream);
@@ -234,22 +251,25 @@
                 document.getElementById('stopRecordingButton').disabled = false;
             }).catch(error => {
                 console.error("Error accessing microphone:", error);
-                alert("Tebɣiḍ ad tebḍiḍ iminig-ik. Ma yella tebɣiḍ ad tesleḍ, zmel akken iɣ ilaq.");
+                alert("Ma tebɣiḍ ad teskelseḍ, ldi asawaḍ-ik.");
             });
         }
 
+        // Function to stop recording
         function stopRecording() {
             mediaRecorder.stop();
             document.getElementById('startRecordingButton').disabled = false;
             document.getElementById('stopRecordingButton').disabled = true;
         }
 
+        // Function to listen to user's recording
         function listenToUserRecording() {
             const audioUrl = URL.createObjectURL(userAudioBlob);
             const audioPlayer = new Audio(audioUrl);
             audioPlayer.play();
         }
 
+        // Function to move to the next word
         function nextWord() {
             currentWordIndex++;
             if (currentWordIndex < words.length) {
@@ -260,6 +280,7 @@
             }
         }
 
+        // Function to restart the game
         function resetGame() {
             currentWordIndex = 0;
             loadWord(currentWordIndex);
@@ -267,6 +288,7 @@
             document.getElementById('cycleControls').classList.add('hidden');
         }
 
+        // Function to exit the game
         function exitGame() {
             if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
                 try {
@@ -277,6 +299,7 @@
             }
         }
 
+        // Event listener for the launch game button
         document.getElementById('launchGameButton').addEventListener('click', () => {
             openFullscreen();
             document.getElementById('gameContainer').classList.remove('hidden');
@@ -284,6 +307,7 @@
             loadWord(currentWordIndex);
         });
 
+        // Event listener for the native speaker audio button
         document.getElementById('listenNativeButton').addEventListener('click', () => {
             preRecordedAudio.play();
         });

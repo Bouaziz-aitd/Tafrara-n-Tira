@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="kab">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lmed Taqbaylit s Wurar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 800px;
+        }
+        .sentence-box {
+            margin: 10px 0;
+            text-align: center;
+        }
+        .word-button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .controls button.play-again {
+            background-color: #28a745;
+            color: white;
+        }
+        .controls button.play-again:hover {
+            background-color: #218838;
+        }
+        .controls button.exit {
+            background-color: #dc3545;
+            color: white;
+        }
+        .controls button.exit:hover {
+            background-color: #c82333;
+        }
+        .hidden {
+            display: none;
+        }
+        .instructions {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        #launchGameButton {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #launchGameButton:hover {
+            background-color: #0056b3;
+        }
+        #listenUserButton {
+            background-color: #007bff;
+            color: white;
+        }
+        #nextWordButton {
+            background-color: #77dd77; /* Lighter green */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lmed Taqbaylit s Wurar</h1>
+    <div class="subtitle">Aru Ini-d- Alaɣmu 3.1</div>
+    <button id="launchGameButton">URAR</button>
+    <div class="game-container hidden" id="gameContainer">
+        <div class="sentence-box" id="frenchSentence"></div>
+        <div class="sentence-box" id="englishSentence"></div>
+        <div class="sentence-box">
+            <button class="word-button" id="listenNativeButton">ferḥeɣ aṭas ass-a</button>
+        </div>
+        <div class="controls">
+            <button id="startRecordingButton" onclick="startRecording()">Sekles</button>
+            <button id="stopRecordingButton" onclick="stopRecording()" disabled>Bedd</button>
+            <button id="listenUserButton" onclick="listenToUserRecording()" disabled>Awal-ik</button>
+        </div>
+        <div class="controls">
+            <button id="nextWordButton" onclick="nextWord()">DDU</button>
+        </div>
+        <div class="controls hidden" id="cycleControls">
+            <button class="play-again" onclick="resetGame()">Rnu Urar</button>
+            <button class="exit" onclick="exitGame()">Ffeɣ</button>
+        </div>
+    </div>
+    <div class="instructions">
+        Tekki tiqeffalin Awal, Sekles, Bedd, Sel, DDU
+    </div>
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let currentWordIndex = 0;
+        let userAudioBlob;
+        let preRecordedAudio;
+
+        const words = [
+            {
+		french: "Viel homme",
+		english: "Elder man",
+		kabyle: "amɣar",
+		audioFile: "audio/amɣar.ogg"
+            },
+            {
+		french: "Vielle femme",
+		english: "Elder woman",
+		kabyle: "tamɣart",
+		audioFile: "audio/tamɣart.ogg"
+            },
+            {
+		french: "Papa",
+		english: "Dady",
+		kabyle: "baba",
+		audioFile: "audio/baba.ogg"
+            },
+            {
+		french: "Homme",
+		english: "Man",
+		kabyle: "argaz",
+		audioFile: "audio/argaz.ogg"
+            },
+            {
+		french: "Femme",
+		english: "Woman",
+		kabyle: "tameṭṭut",
+		audioFile: "audio/tameṭṭut.ogg"
+            },
+            {
+		french: "Garçon",
+		english: "Boy",
+		kabyle: "aqcic",
+		audioFile: "audio/aqcic.ogg"
+            },
+            {
+		french: "Fille",
+		english: "Girl",
+		kabyle: "taqcict",
+		audioFile: "audio/taqcict.ogg"
+            },
+            {
+		french: "Maman",
+		english: "Mom",
+		kabyle: "yemma",
+		audioFile: "audio/yemma.ogg"
+            },
+            {
+		french: "Famille",
+		english: "Familly",
+		kabyle: "tawacult",
+		audioFile: "audio/tawacult.ogg"
+            }
+        ];
+
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        function loadWord(index) {
+            const word = words[index];
+            document.getElementById('frenchSentence').textContent = `Français: ${word.french}`;
+            document.getElementById('englishSentence').textContent = `English: ${word.english}`;
+            document.getElementById('listenNativeButton').textContent = word.kabyle;
+            preRecordedAudio = new Audio(word.audioFile);
+            preRecordedAudio.play(); // Automatically play the pre-recorded audio
+            document.getElementById('listenUserButton').disabled = true;
+        }
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    userAudioBlob = new Blob(audioChunks, { type: 'audio/ogg' });
+                    document.getElementById('listenUserButton').disabled = false;
+                };
+
+                mediaRecorder.start();
+                document.getElementById('startRecordingButton').disabled = true;
+                document.getElementById('stopRecordingButton').disabled = false;
+            }).catch(error => {
+                console.error("Error accessing microphone:", error);
+                alert("Tebɣiḍ ad tebḍiḍ iminig-ik. Ma yella tebɣiḍ ad tesleḍ, zmel akken iɣ ilaq.");
+            });
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            document.getElementById('startRecordingButton').disabled = false;
+            document.getElementById('stopRecordingButton').disabled = true;
+        }
+
+        function listenToUserRecording() {
+            const audioUrl = URL.createObjectURL(userAudioBlob);
+            const audioPlayer = new Audio(audioUrl);
+            audioPlayer.play();
+        }
+
+        function nextWord() {
+            currentWordIndex++;
+            if (currentWordIndex < words.length) {
+                loadWord(currentWordIndex);
+            } else {
+                document.getElementById('nextWordButton').classList.add('hidden');
+                document.getElementById('cycleControls').classList.remove('hidden');
+            }
+        }
+
+        function resetGame() {
+            currentWordIndex = 0;
+            loadWord(currentWordIndex);
+            document.getElementById('nextWordButton').classList.remove('hidden');
+            document.getElementById('cycleControls').classList.add('hidden');
+        }
+
+        function exitGame() {
+            if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
+                try {
+                    window.close();
+                } catch (error) {
+                    alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
+                }
+            }
+        }
+
+        document.getElementById('launchGameButton').addEventListener('click', () => {
+            openFullscreen();
+            document.getElementById('gameContainer').classList.remove('hidden');
+            document.getElementById('launchGameButton').style.display = 'none';
+            loadWord(currentWordIndex);
+        });
+
+        document.getElementById('listenNativeButton').addEventListener('click', () => {
+            preRecordedAudio.play();
+        });
+
+        // Activate the "DDU" button by default
+        document.getElementById('nextWordButton').disabled = false;
+    </script>
+</body>
+</html>

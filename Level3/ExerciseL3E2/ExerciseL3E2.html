@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="kab">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lmed Taqbaylit s Wurar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 800px;
+        }
+        .sentence-box {
+            margin: 10px 0;
+            text-align: center;
+        }
+        .word-button.hidden {
+            display: none;
+        }
+        .word-button {
+            padding: 15px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .controls button {
+            padding: 8px 16px;
+            font-size: 14px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .controls button.play-again {
+            background-color: #28a745;
+            color: white;
+        }
+        .controls button.play-again:hover {
+            background-color: #218838;
+        }
+        .controls button.exit {
+            background-color: #dc3545;
+            color: white;
+        }
+        .controls button.exit:hover {
+            background-color: #c82333;
+        }
+        .hidden {
+            display: none;
+        }
+        .instructions.hidden {
+            display: none;
+        }
+        .instructions {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        #launchGameButton {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #launchGameButton:hover {
+            background-color: #0056b3;
+        }
+        #listenUserButton {
+            background-color: #007bff;
+            color: white;
+        }
+        #nextWordButton {
+            background-color: #77dd77;
+            color: white;
+        }
+        .audio-buttons button {
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .audio-buttons button.small {
+            background-color: #0056b3;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .diacritic-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 5px;
+        }
+        .diacritic-buttons button {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px 8px;
+            cursor: pointer;
+        }
+        .response-message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .response-message.correct {
+            color: green;
+        }
+        .response-message.incorrect {
+            color: red;
+        }
+        #submitAnswerButton {
+            background-color: #77dd77;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lmed Taqbaylit s Wurar</h1>
+    <div class="subtitle">Aru Ini-d- Alaɣmu 3.2</div>
+    <button id="launchGameButton">URAR</button>
+    <div class="game-container hidden" id="gameContainer">
+        <div class="sentence-box" id="frenchSentence"></div>
+        <div class="sentence-box" id="englishSentence"></div>
+        <div class="sentence-box">
+            <button class="word-button hidden" id="listenNativeButton">ferḥeɣ aṭas ass-a</button>
+        </div>
+        <div class="audio-buttons">
+            <button id="normalPlaybackButton">ALES-D</button>
+            <button id="slowPlaybackButton" class="small">ALES-D</button>
+        </div>
+        <div class="sentence-box">
+            <span>Aru Da:</span>
+            <input type="text" id="userInput" placeholder="_">
+        </div>
+        <div class="diacritic-buttons">
+            <button onclick="addDiacritic('č')">č</button>
+            <button onclick="addDiacritic('ḍ')">ḍ</button>
+            <button onclick="addDiacritic('ǧ')">ǧ</button>
+            <button onclick="addDiacritic('ḥ')">ḥ</button>
+            <button onclick="addDiacritic('ṛ')">ṛ</button>
+            <button onclick="addDiacritic('ṣ')">ṣ</button>
+            <button onclick="addDiacritic('ṭ')">ṭ</button>
+            <button onclick="addDiacritic('ẓ')">ẓ</button>
+            <button onclick="addDiacritic('ɣ')">ɣ</button>
+            <button onclick="addDiacritic('ɛ')">ɛ</button>
+            <button onclick="addDiacritic('-')">-</button>
+        </div>
+        <div class="controls">
+            <button id="submitAnswerButton" onclick="submitAnswer()">AZEN</button>
+        </div>
+        <div class="response-message" id="responseMessage"></div>
+        <div class="controls hidden" id="nextControls">
+            <button id="nextWordButton" onclick="nextWord()">DDU</button>
+        </div>
+        <div class="controls hidden" id="cycleControls">
+            <button class="play-again" onclick="resetGame()">Rnu Urar</button>
+            <button class="exit" onclick="exitGame()">Ffeɣ</button>
+        </div>
+        <div class="instructions">
+            Aru s yisekkilen imecṭuḥen. Tekki AZEN syin DDU
+        </div>
+    </div>
+    <script>
+        let currentWordIndex = 0;
+        const words = [
+            {
+                kabyle: "tameṭṭut",
+                french: "Une femme",
+                english: "A woman",
+                audioFile: "audio/tameṭṭut.ogg"
+            },
+            {
+                kabyle: "argaz",
+                french: "Un homme",
+                english: "A man",
+                audioFile: "audio/argaz.ogg"
+            },
+            {
+                kabyle: "tamɣart",
+                french: "Une vielle femme",
+                english: "An elder woman",
+                audioFile: "audio/tamɣart.ogg"
+            },
+            {
+                kabyle: "yemma",
+                french: "Mère",
+                english: "Mother",
+                audioFile: "audio/yemma.ogg"
+            },
+            {
+                kabyle: "taqcict",
+                french: "Père",
+                english: "Father",
+                audioFile: "audio/taqcict.ogg"
+            },
+            {
+                kabyle: "tawacult",
+                french: "Famille",
+                english: "Family",
+                audioFile: "audio/tawacult.ogg"
+            }
+        ];
+        const dingSound = new Audio('audio/ding.ogg');
+        const scratchSound = new Audio('audio/scratch.ogg');
+
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        function loadWord(index) {
+            const word = words[index];
+            document.getElementById('frenchSentence').textContent = '';
+            document.getElementById('englishSentence').textContent = '';
+            document.getElementById('listenNativeButton').textContent = word.kabyle;
+            document.getElementById('listenNativeButton').classList.add('hidden');
+            document.getElementById('userInput').value = '';
+            document.getElementById('responseMessage').textContent = '';
+            document.getElementById('responseMessage').classList.remove('correct', 'incorrect');
+            document.getElementById('nextControls').classList.add('hidden');
+            document.getElementById('submitAnswerButton').classList.remove('hidden');
+            setTimeout(() => playAudio(word.audioFile), 1000);
+            document.getElementById('userInput').focus();
+        }
+
+        function playAudio(audioFile, playbackRate = 1) {
+            const audio = new Audio(audioFile);
+            audio.playbackRate = playbackRate;
+            audio.play();
+        }
+
+        function submitAnswer() {
+            const userInput = document.getElementById('userInput').value.trim().toLowerCase();
+            const correctAnswer = words[currentWordIndex].kabyle.toLowerCase();
+            const responseMessage = document.getElementById('responseMessage');
+            if (userInput === correctAnswer) {
+                responseMessage.textContent = "Ayuz!";
+                responseMessage.classList.add('correct');
+                responseMessage.classList.remove('incorrect');
+                dingSound.play();
+            } else {
+                responseMessage.textContent = `Dir tiririt. Aseɣti d wa: ${words[currentWordIndex].kabyle}`;
+                responseMessage.classList.add('incorrect');
+                responseMessage.classList.remove('correct');
+                scratchSound.play();
+            }
+            document.getElementById('frenchSentence').textContent = `Français: ${words[currentWordIndex].french}`;
+            document.getElementById('englishSentence').textContent = `English: ${words[currentWordIndex].english}`;
+            document.getElementById('listenNativeButton').classList.remove('hidden');
+            document.getElementById('nextControls').classList.remove('hidden');
+            document.getElementById('submitAnswerButton').classList.add('hidden');
+        }
+
+        function nextWord() {
+            currentWordIndex++;
+            if (currentWordIndex < words.length) {
+                loadWord(currentWordIndex);
+            } else {
+                document.getElementById('nextControls').classList.add('hidden');
+                document.getElementById('cycleControls').classList.remove('hidden');
+            }
+        }
+
+        function resetGame() {
+            currentWordIndex = 0;
+            loadWord(currentWordIndex);
+            document.getElementById('nextControls').classList.add('hidden');
+            document.getElementById('cycleControls').classList.add('hidden');
+        }
+
+        function exitGame() {
+            if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
+                try {
+                    window.close();
+                } catch (error) {
+                    alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
+                }
+            }
+        }
+
+        document.getElementById('launchGameButton').addEventListener('click', () => {
+            openFullscreen();
+            document.getElementById('gameContainer').classList.remove('hidden');
+            document.getElementById('launchGameButton').style.display = 'none';
+            loadWord(currentWordIndex);
+        });
+
+        document.getElementById('listenNativeButton').addEventListener('click', () => {
+            playAudio(words[currentWordIndex].audioFile);
+        });
+
+        document.getElementById('normalPlaybackButton').addEventListener('click', () => {
+            playAudio(words[currentWordIndex].audioFile);
+        });
+
+        document.getElementById('slowPlaybackButton').addEventListener('click', () => {
+            playAudio(words[currentWordIndex].audioFile, 0.6);
+        });
+
+        function addDiacritic(char) {
+            const input = document.getElementById('userInput');
+            input.value += char;
+        }
+    </script>
+</body>
+</html>

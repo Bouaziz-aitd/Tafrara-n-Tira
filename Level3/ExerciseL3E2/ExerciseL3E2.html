@@ -32,7 +32,7 @@
             max-width: 800px;
         }
         .sentence-box {
-            margin: 10px 0;
+            margin: 5px 0;
             text-align: center;
         }
         .word-button.hidden {
@@ -76,9 +76,6 @@
             background-color: #c82333;
         }
         .hidden {
-            display: none;
-        }
-        .instructions.hidden {
             display: none;
         }
         .instructions {
@@ -202,20 +199,20 @@
         const words = [
             {
                 kabyle: "tameṭṭut",
-                french: "Une femme",
-                english: "A woman",
+                french: "Femme",
+                english: "Woman",
                 audioFile: "audio/tameṭṭut.ogg"
             },
             {
                 kabyle: "argaz",
-                french: "Un homme",
-                english: "A man",
+                french: "Homme",
+                english: "Man",
                 audioFile: "audio/argaz.ogg"
             },
             {
                 kabyle: "tamɣart",
-                french: "Une vielle femme",
-                english: "An elder woman",
+                french: "Vielle femme",
+                english: "Elder woman",
                 audioFile: "audio/tamɣart.ogg"
             },
             {
@@ -226,8 +223,8 @@
             },
             {
                 kabyle: "taqcict",
-                french: "Père",
-                english: "Father",
+                french: "Fille",
+                english: "Girl",
                 audioFile: "audio/taqcict.ogg"
             },
             {
@@ -237,8 +234,6 @@
                 audioFile: "audio/tawacult.ogg"
             }
         ];
-        const dingSound = new Audio('audio/ding.ogg');
-        const scratchSound = new Audio('audio/scratch.ogg');
 
         function openFullscreen() {
             const elem = document.documentElement;
@@ -282,12 +277,12 @@
                 responseMessage.textContent = "Ayuz!";
                 responseMessage.classList.add('correct');
                 responseMessage.classList.remove('incorrect');
-                dingSound.play();
+                playAudio('audio/correct-answer.ogg'); // Play correct answer sound
             } else {
                 responseMessage.textContent = `Dir tiririt. Aseɣti d wa: ${words[currentWordIndex].kabyle}`;
                 responseMessage.classList.add('incorrect');
                 responseMessage.classList.remove('correct');
-                scratchSound.play();
+                playAudio('audio/wrong-answer.ogg'); // Play wrong answer sound
             }
             document.getElementById('frenchSentence').textContent = `Français: ${words[currentWordIndex].french}`;
             document.getElementById('englishSentence').textContent = `English: ${words[currentWordIndex].english}`;

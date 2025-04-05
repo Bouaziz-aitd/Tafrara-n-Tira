@@ -83,13 +83,14 @@
         }
         .word-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             width: 100%;
             margin-bottom: 20px;
         }
         .dropdown-container {
             display: flex;
+	    flex-direction: column;
             align-items: center;
             margin-bottom: 20px;
         }
@@ -112,7 +113,7 @@
 <body>
     <header>
         <h1>Lmed Taqbaylit s Wurar</h1>
-        <div class="subtitle">Addad Amaruz - Alaɣmu 4.1 </div>
+        <div class="subtitle">Addad Amaruz - Alaɣmu 4.1</div>
     </header>
     <main>
         <div id="startPage">
@@ -120,30 +121,65 @@
         </div>
 
         <div id="gamePage" class="hidden">
+
             <div class="concept-description">
-                seg, deg, ɣef, ɣer, n, d, s, i,<br>
-                ddaw, seddaw, sdaxel, nnig, sennig, sdat,<br>
-                deffir, sdeffir, ɣur, sɣur, akked.<br>
-                Wi d awalen yettarran isem deg waddad amaruz
+                Awalen-a s wadda ttarran isem deg waddad amaruz
+	    </div>
+
+            <div class="dropdown-container">
+                <select id="Tanzeɣt" onchange="loadWord(0)">
+                    <option value="Ilelli_Amaruz">Ilelli >>> Amaruz</option>
+                    <option value="deg">axxam >>> deg uxxam</option>
+                    <option value="seg">axxam >>> seg uxxam</option>
+                    <option value="ɣef">axxam >>> ɣef uxxam </option>
+                    <option value="ɣer">axxam >>> ɣer uxxam </option>
+                    <option value="ddaw">axxam >>> ddaw uxxam </option>
+                    <option value="nnig">axxam >>> nnig uxxam </option>
+                    <option value="seddaw">axxam >>> seddaw uxxam </option>
+                    <option value="sennig">axxam >>> sennig uxxam </option>
+                    <option value="sdat">axxam >>> sdat uxxam </option>
+                    <option value="sdaxel">axxam >>> sdaxel uxxam </option>
+                    <option value="deffir">axxam >>> deffir uxxam </option>
+                    <option value="sdeffir">axxam >>> sdeffir uxxam </option>
+                    <option value="ɣur">argaz >>> ɣur urgaz </option>
+                    <option value="sɣur">argaz >>> sɣur urgaz </option>
+                    <option value="akked">argaz >>> akked urgaz </option>
+                    <option value="n">axxam >>> n uxxam </option>
+                    <option value="d">axxam >>> d uxxam </option>
+                    <option value="i">axxam >>> i uxxam </option>
+                    <option value="s">axxam >>> s uxxam </option>
+                </select>
+            </div>
+
+
+            <div class="concept-description">
+                Ẓer s wadda talɣiwin n yisem
             </div>
             
+
             <div class="dropdown-container">
                 <select id="A-select" onchange="loadWord(0)">
+                    <option value="Talɣiwin">Talɣiwin n umaruz</option>
                     <option value="A - U, WA">A - U, WA</option>
                     <option value="I - Yi">I - Yi</option>
                     <option value="TA - T, TA, TE">TA - T, TA, TE</option>
                     <option value="TI - T, TE">TI - T, TE</option>
                     <option value="TU - TU">TU - TU</option>
                     <option value="U - WU">U - WU</option>
+                    <option value="DA - DA">DA - DA</option>
+                    <option value="DE - DE">DE - DE</option>
                 </select>
                 <button class="btn-info info-button" onclick="playInfoAudio()">i</button>
             </div>
 
-            <div class="translations" id="translations"></div>
+            <div class="translations" id="translations">
+                <div id="frenchSentence"></div>
+                <div id="englishSentence"></div>
+            </div>
 
             <div class="word-container">
-                <button class="btn-blue" onclick="playAudio()"></button>
-                <button class="btn-sand"></button>
+                <button class="btn-blue" onclick="playFreeFormAudio()"></button>
+                <button class="btn-sand" onclick="playAnnexedFormAudio()"></button>
             </div>
 
             <div class="controls">
@@ -163,16 +199,16 @@
 
     <script>
         const words = [
-            { free: "agrud", annexed: "ugrud", fr: "garçon", en: "boy", audio: "audio/agrud_ugrud.ogg" },
-            { free: "amcic", annexed: "umcic", fr: "chat", en: "cat", audio: "audio/amcic_umcic.ogg" },
-            { free: "axxam", annexed: "uxxam", fr: "maison", en: "house", audio: "audio/axxam_uxxam.ogg" },
-            { free: "aweṭṭuf", annexed: "uweṭṭuf", fr: "fourmis", en: "ants", audio: "audio/aweṭṭuf_uweṭṭuf.ogg" },
-            { free: "ageffur", annexed: "ugeffur", fr: "pluie", en: "rain", audio: "audio/ageffur_ugeffur.ogg" },
-            { free: "ass", annexed: "wass", fr: "jour", en: "day", audio: "audio/ass_wass.ogg" },
-            { free: "aɣerbaz", annexed: "uɣerbaz", fr: "école", en: "school", audio: "audio/aɣerbaz_uɣerbaz.ogg" },
-            { free: "asif", annexed: "wasif", fr: "rivière", en: "river", audio: "audio/asif_wasif.ogg" },
-            { free: "argaz", annexed: "urgaz", fr: "homme", en: "man", audio: "audio/argaz_urgaz.ogg" },
-            { free: "aqabac", annexed: "uqabac", fr: "pioche", en: "pickaxe", audio: "audio/aqabac_uqabac.ogg" }
+            { free: "axxam", annexed: "yeṭṭes deg uxxam", fr: "Il dort dans la maison", en: "His is sleeping in the house", freeAudio: "audio/axxam.ogg", annexedAudio: "audio/axxam_uxxam.ogg" },
+            { free: "Argaz d yimeṛṛa", annexed: "Urgaz d yimeṛṛa", fr: "L'homme et ses amis", en: "The man and his friends", freeAudio: "audio/argaz_free.ogg", annexedAudio: "audio/urgaz_annexed.ogg" },
+            { free: "Asif s waɛraben", annexed: "Wasif s waɛraben", fr: "La rivière avec des poissons", en: "The river with fish", freeAudio: "audio/asif_free.ogg", annexedAudio: "audio/wasif_annexed.ogg" },
+            { free: "Aqcic s tazzit", annexed: "Uqcic s tazzit", fr: "Le chat sur la table", en: "The cat on the table", freeAudio: "audio/aqcic_free.ogg", annexedAudio: "audio/uqcic_annexed.ogg" },
+            { free: "Ass d wayen", annexed: "Wass d wayen", fr: "Le jour est beau", en: "The day is beautiful", freeAudio: "audio/ass_free.ogg", annexedAudio: "audio/wass_annexed.ogg" },
+            { free: "Aɣerbaz n tmurt", annexed: "Uɣerbaz n tmurt", fr: "L'école du village", en: "The village school", freeAudio: "audio/aɣerbaz_free.ogg", annexedAudio: "audio/uɣerbaz_annexed.ogg" },
+            { free: "Awal d tidett", annexed: "Uwal d tidett", fr: "Le mot et l'idée", en: "The word and the idea", freeAudio: "audio/awal_free.ogg", annexedAudio: "audio/uwal_annexed.ogg" },
+            { free: "Abbab d yimeslayen", annexed: "Ubabb d yimeslayen", fr: "La porte et les clés", en: "The door and the keys", freeAudio: "audio/abbab_free.ogg", annexedAudio: "audio/ubbab_annexed.ogg" },
+            { free: "Aweḍṛes n waman", annexed: "Uweḍṛes n waman", fr: "La fenêtre et le ciel", en: "The window and the sky", freeAudio: "audio/aweḍṛes_free.ogg", annexedAudio: "audio/uweḍṛes_annexed.ogg" },
+            { free: "Asefra s timlilitin", annexed: "Usefra s timlilitin", fr: "Le livre avec des images", en: "The book with pictures", freeAudio: "audio/asefra_free.ogg", annexedAudio: "audio/usefra_annexed.ogg" }
         ];
         let currentWordIndex = 0;
 
@@ -192,8 +228,13 @@
             loadWord(currentWordIndex);
         }
 
-        function playAudio() {
-            const audio = new Audio(words[currentWordIndex].audio);
+        function playFreeFormAudio() {
+            const audio = new Audio(words[currentWordIndex].freeAudio);
+            audio.play();
+        }
+
+        function playAnnexedFormAudio() {
+            const audio = new Audio(words[currentWordIndex].annexedAudio);
             audio.play();
         }
 
@@ -235,7 +276,8 @@
             const word = words[index];
             document.querySelector('.word-container .btn-blue').textContent = word.free;
             document.querySelector('.word-container .btn-sand').textContent = word.annexed;
-            document.getElementById('translations').textContent = `French: ${word.fr}, English: ${word.en}`;
+            document.getElementById('frenchSentence').textContent = `Français: ${word.fr}`;
+            document.getElementById('englishSentence').textContent = `English: ${word.en}`;
         }
 
         document.getElementById('launchGameButton').addEventListener('click', () => {

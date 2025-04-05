@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="kab">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lmed Taqbaylit s Wurar - Addad Amaruz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header, footer {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        main {
+            padding: 20px;
+            text-align: center;
+            max-width: 600px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-blue {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-sand {
+            background-color: #f4a460;
+            color: white;
+        }
+        .btn-green {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 14px;
+            line-height: 1;
+            width: 30px;
+            height: 30px;
+        }
+        select {
+            padding: 5px;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+        audio {
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .instructions {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .word-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .info-button {
+            margin-left: 10px;
+        }
+        .translations {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        .concept-description {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lmed Taqbaylit s Wurar</h1>
+        <div class="subtitle">Addad Amaruz - Alaɣmu 4.1 (Amended)</div>
+    </header>
+    <main>
+        <div id="startPage">
+            <button id="launchGameButton" class="btn-blue">URAR</button>
+        </div>
+
+        <div id="gamePage" class="hidden">
+            <div class="concept-description">
+                seg, deg, ɣef, ɣer, n, d, s, i,<br>
+                ddaw, seddaw, sdaxel, nnig, sennig, sdat,<br>
+                deffir, sdeffir, ɣur, sɣur, akked.<br>
+                Wi d awalen yettarran isem deg waddad amaruz
+            </div>
+            
+            <div class="dropdown-container">
+                <select id="A-select" onchange="loadWord(0)">
+                    <option value="A - U, WA">A - U, WA</option>
+                    <option value="I - Yi">I - Yi</option>
+                    <option value="TA - T, TA, TE">TA - T, TA, TE</option>
+                    <option value="TI - T, TE">TI - T, TE</option>
+                    <option value="TU - TU">TU - TU</option>
+                    <option value="U - WU">U - WU</option>
+                </select>
+                <button class="btn-info info-button" onclick="playInfoAudio()">i</button>
+            </div>
+
+            <div class="translations" id="translations"></div>
+
+            <div class="word-container">
+                <button class="btn-blue" onclick="playAudio()"></button>
+                <button class="btn-sand"></button>
+            </div>
+
+            <div class="controls">
+                <button class="btn-green" id="nextWordButton" onclick="nextWord()">DDU</button>
+            </div>
+
+            <div class="instructions" id="instructions">
+                Lmed syin DDU ɣer sdat
+            </div>
+
+            <div class="controls hidden" id="cycleControls">
+                <button class="btn-green" onclick="resetGame()">Rnu Urar</button>
+                <button class="btn-green" onclick="exitGame()">Ffeɣ</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const words = [
+            { free: "agrud", annexed: "ugrud", fr: "garçon", en: "boy", audio: "audio/agrud_ugrud.ogg" },
+            { free: "amcic", annexed: "umcic", fr: "chat", en: "cat", audio: "audio/amcic_umcic.ogg" },
+            { free: "axxam", annexed: "uxxam", fr: "maison", en: "house", audio: "audio/axxam_uxxam.ogg" },
+            { free: "aweṭṭuf", annexed: "uweṭṭuf", fr: "fourmis", en: "ants", audio: "audio/aweṭṭuf_uweṭṭuf.ogg" },
+            { free: "ageffur", annexed: "ugeffur", fr: "pluie", en: "rain", audio: "audio/ageffur_ugeffur.ogg" },
+            { free: "ass", annexed: "wass", fr: "jour", en: "day", audio: "audio/ass_wass.ogg" },
+            { free: "aɣerbaz", annexed: "uɣerbaz", fr: "école", en: "school", audio: "audio/aɣerbaz_uɣerbaz.ogg" },
+            { free: "asif", annexed: "wasif", fr: "rivière", en: "river", audio: "audio/asif_wasif.ogg" },
+            { free: "argaz", annexed: "urgaz", fr: "homme", en: "man", audio: "audio/argaz_urgaz.ogg" },
+            { free: "aqabac", annexed: "uqabac", fr: "pioche", en: "pickaxe", audio: "audio/aqabac_uqabac.ogg" }
+        ];
+        let currentWordIndex = 0;
+
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+            document.getElementById('startPage').classList.add('hidden');
+            document.getElementById('gamePage').classList.remove('hidden');
+            loadWord(currentWordIndex);
+        }
+
+        function playAudio() {
+            const audio = new Audio(words[currentWordIndex].audio);
+            audio.play();
+        }
+
+        function playInfoAudio() {
+            const audio = new Audio("audio/addad_amaruz_41.ogg");
+            audio.play();
+        }
+
+        function nextWord() {
+            currentWordIndex++;
+            if (currentWordIndex < words.length) {
+                loadWord(currentWordIndex);
+            } else {
+                document.getElementById('nextWordButton').classList.add('hidden');
+                document.getElementById('cycleControls').classList.remove('hidden');
+                document.getElementById('instructions').classList.add('hidden');
+            }
+        }
+
+        function resetGame() {
+            currentWordIndex = 0;
+            loadWord(currentWordIndex);
+            document.getElementById('nextWordButton').classList.remove('hidden');
+            document.getElementById('cycleControls').classList.add('hidden');
+            document.getElementById('instructions').classList.remove('hidden');
+        }
+
+        function exitGame() {
+            if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
+                try {
+                    window.close();
+                } catch (error) {
+                    alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
+                }
+            }
+        }
+
+        function loadWord(index) {
+            const word = words[index];
+            document.querySelector('.word-container .btn-blue').textContent = word.free;
+            document.querySelector('.word-container .btn-sand').textContent = word.annexed;
+            document.getElementById('translations').textContent = `French: ${word.fr}, English: ${word.en}`;
+        }
+
+        document.getElementById('launchGameButton').addEventListener('click', () => {
+            openFullscreen();
+        });
+    </script>
+</body>
+</html>

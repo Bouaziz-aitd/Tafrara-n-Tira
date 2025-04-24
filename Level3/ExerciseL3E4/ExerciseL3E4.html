@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="kab">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Puzzle Prototype</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .subtitle {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 800px;
+        }
+        .color-palette {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .color-palette div {
+            width: 25px; /* Reduced size */
+            height: 25px; /* Reduced size */
+            border: 2px solid #000;
+            cursor: pointer;
+        }
+        .color-palette .blue {
+            background-color: #007bff;
+        }
+        .color-palette .grey {
+            background-color: #ffffff; /* White background */
+        }
+        table {
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        td {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        td.blue {
+            background-color: #007bff;
+            color: white;
+        }
+        td.greyed-out {
+            background-color: #ffffff; /* White background */
+            color: #000000; /* Black text */
+        }
+        .audio-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .audio-buttons button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .audio-buttons button.small {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .instructions {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #555;
+        }
+        .controls {
+            margin-top: 10px;
+        }
+        .controls button {
+            padding: 8px 16px;
+            font-size: 14px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .controls button.play-again {
+            background-color: #28a745;
+            color: white;
+        }
+        .controls button.play-again:hover {
+            background-color: #218838;
+        }
+        .controls button.exit {
+            background-color: #dc3545;
+            color: white;
+        }
+        .controls button.exit:hover {
+            background-color: #c82333;
+        }
+        .hidden {
+            display: none;
+        }
+        #launchGameButton {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #launchGameButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- General Title and Subtitle -->
+    <h1>Urar s wawal n Teqbaylit</h1>
+    <div class="subtitle">Aru Ini-d - Alaɣmu 3.4</div>
+
+    <!-- URAR Button for Fullscreen -->
+    <button id="launchGameButton">URAR</button>
+
+    <!-- Game Container -->
+    <div class="game-container hidden" id="gameContainer">
+        <!-- Color Palette -->
+        <div class="color-palette">
+            <div class="blue" onclick="setActiveColor('blue')"></div>
+            <div class="grey" onclick="setActiveColor('grey')"></div>
+        </div>
+
+        <!-- Table -->
+        <table id="letterTable"></table>
+
+        <!-- Audio Buttons -->
+        <div class="audio-buttons">
+            <button id="normalPlaybackButton" onclick="playAudio(currentWord.audioFile)">ALES</button>
+            <button id="slowPlaybackButton" class="small" onclick="playAudio(currentWord.audioFile, 0.6)">ALES</button>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            Tekki ɣef yisekkilen deg tfelwit s unili. 
+	    Aru awal i tesliḍ. 
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="controls hidden" id="cycleControls">
+            <button class="play-again" onclick="resetGame()">Rnu Urar</button>
+            <button class="exit" onclick="exitGame()">DDU</button>
+        </div>
+    </div>
+
+    <script>
+        const kabyleAlphabet = "abcdefghijklmnopqrstuvwxyzčḍǧḥṛṣṭẓɣɛ";
+        const targetWords = [
+            { word: "argaz", audioFile: "audio/argaz.ogg" },
+            { word: "aqcic", audioFile: "audio/aqcic.ogg" },
+            { word: "taqcict", audioFile: "audio/taqcict.ogg" },
+            { word: "amɣar", audioFile: "audio/amɣar.ogg" },
+            { word: "tamɣart", audioFile: "audio/tamɣart.ogg" },
+            { word: "tameṭṭut", audioFile: "audio/tameṭṭut.ogg" }
+        ];
+        let tableData;
+        let activeColor = 'blue'; // Default active color
+        let targetWordPositions = []; // To store positions of all target words
+        let currentWordIndex = 0; // Current word index
+        let currentWord; // Current word object
+
+        function generateTable(rows, cols) {
+            const table = document.getElementById('letterTable');
+            table.innerHTML = ''; // Clear existing table
+            tableData = Array.from({ length: rows }, () => Array(cols).fill(null));
+
+            // Place the current word randomly in the table
+            placeWordRandomly(currentWord.word);
+
+            // Fill the remaining cells with random letters
+            for (let i = 0; i < rows; i++) {
+                const tr = document.createElement('tr');
+                for (let j = 0; j < cols; j++) {
+                    const td = document.createElement('td');
+                    if (tableData[i][j] === null) {
+                        tableData[i][j] = { letter: kabyleAlphabet[Math.floor(Math.random() * kabyleAlphabet.length)], color: '' };
+                    } else {
+                        tableData[i][j] = { letter: tableData[i][j], color: '' };
+                    }
+                    td.textContent = tableData[i][j].letter;
+                    td.addEventListener('click', () => toggleCell(i, j));
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+        }
+
+        function placeWordRandomly(word) {
+            const rows = tableData.length;
+            const cols = tableData[0].length;
+
+            let placed = false;
+            while (!placed) {
+                const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+                const row = Math.floor(Math.random() * rows);
+                const col = Math.floor(Math.random() * cols);
+
+                if (direction === 'horizontal' && col + word.length <= cols) {
+                    let valid = true;
+                    for (let k = 0; k < word.length; k++) {
+                        if (tableData[row][col + k] !== null) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if (valid) {
+                        for (let k = 0; k < word.length; k++) {
+                            tableData[row][col + k] = word[k];
+                            targetWordPositions.push([row, col + k]);
+                        }
+                        placed = true;
+                    }
+                } else if (direction === 'vertical' && row + word.length <= rows) {
+                    let valid = true;
+                    for (let k = 0; k < word.length; k++) {
+                        if (tableData[row + k][col] !== null) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if (valid) {
+                        for (let k = 0; k < word.length; k++) {
+                            tableData[row + k][col] = word[k];
+                            targetWordPositions.push([row + k, col]);
+                        }
+                        placed = true;
+                    }
+                }
+            }
+        }
+
+        function updateTableDisplay() {
+            const table = document.getElementById('letterTable');
+            for (let i = 0; i < tableData.length; i++) {
+                for (let j = 0; j < tableData[i].length; j++) {
+                    const cell = table.rows[i].cells[j];
+                    cell.textContent = tableData[i][j].letter;
+                    cell.classList.toggle('blue', tableData[i][j].color === 'blue');
+                    cell.classList.toggle('greyed-out', tableData[i][j].color === 'grey');
+                }
+            }
+        }
+
+        function setActiveColor(color) {
+            activeColor = color;
+        }
+
+        function toggleCell(row, col) {
+            const cell = tableData[row][col];
+            cell.color = activeColor;
+            updateTableDisplay();
+
+            checkCompletion();
+        }
+
+        function checkCompletion() {
+            let allValidLettersBlue = true;
+
+            for (const [row, col] of targetWordPositions) {
+                const cell = tableData[row][col];
+                if (cell.color !== 'blue') {
+                    allValidLettersBlue = false;
+                    break;
+                }
+            }
+
+            if (allValidLettersBlue) {
+                setTimeout(() => {
+                    currentWordIndex++;
+                    if (currentWordIndex < targetWords.length) {
+                        loadNextWord();
+                    } else {
+                        document.getElementById('cycleControls').classList.remove('hidden');
+                    }
+                }, 1000); // Delay before resetting for the next word
+            }
+        }
+
+        function loadNextWord() {
+            currentWord = targetWords[currentWordIndex];
+            targetWordPositions = [];
+            generateTable(8, 8);
+            playAudio(currentWord.audioFile); // Automatically play the word's audio
+        }
+
+        function resetGame() {
+            currentWordIndex = 0;
+            loadNextWord();
+            document.getElementById('cycleControls').classList.add('hidden');
+        }
+
+        function exitGame() {
+            if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
+                try {
+                    window.close();
+                } catch (error) {
+                    alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
+                }
+            }
+        }
+
+        function playAudio(audioFile, playbackRate = 1) {
+            const audio = new Audio(audioFile);
+            audio.playbackRate = playbackRate;
+            audio.play().catch((error) => {
+                console.error(`Error playing audio:`, error);
+                alert("Ur nufi ara ameslay ara d-nini.");
+            });
+        }
+
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        document.getElementById('launchGameButton').addEventListener('click', () => {
+            openFullscreen();
+            document.getElementById('gameContainer').classList.remove('hidden');
+            document.getElementById('launchGameButton').style.display = 'none';
+            loadNextWord();
+        });
+
+        // Generate an 8x8 table on page load
+        generateTable(8, 8);
+    </script>
+</body>
+</html>
+</html>

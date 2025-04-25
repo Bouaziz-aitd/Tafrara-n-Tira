@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kabyle Verb Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .verb-list {
+      margin-bottom: 20px;
+    }
+    .verb {
+      font-size: 1.2em;
+      margin: 5px 0;
+    }
+    .sefti-button, .back-button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .sefti-button:hover, .back-button:hover {
+      background-color: #218838;
+    }
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      display: none; /* Initially hidden */
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <div class="header">
+    <h1>Kabyle Verbs</h1>
+    <button class="back-button" onclick="hideAmyag()" style="display: none;">Back to Verb List</button>
+  </div>
+
+  <!-- Verb List -->
+  <div class="verb-list">
+    <div class="verb">aru</div>
+    <div class="verb">ddem</div>
+    <div class="verb">azzel</div>
+  </div>
+
+  <!-- Sefti Button -->
+  <button class="sefti-button" onclick="showAmyag()">Sefti</button>
+
+  <!-- Amyag Iframe -->
+  <iframe id="amyag-iframe" src="https://www.amyag.com/f/NDU/aru"></iframe>
+
+  <script>
+    // Function to show Amyag iframe and hide the verb list
+    function showAmyag() {
+      document.querySelector('.verb-list').style.display = 'none'; // Hide verb list
+      document.querySelector('.sefti-button').style.display = 'none'; // Hide Sefti button
+      document.getElementById('amyag-iframe').style.display = 'block'; // Show Amyag iframe
+      document.querySelector('.back-button').style.display = 'inline-block'; // Show Back button
+    }
+
+    // Function to hide Amyag iframe and show the verb list
+    function hideAmyag() {
+      document.querySelector('.verb-list').style.display = 'block'; // Show verb list
+      document.querySelector('.sefti-button').style.display = 'inline-block'; // Show Sefti button
+      document.getElementById('amyag-iframe').style.display = 'none'; // Hide Amyag iframe
+      document.querySelector('.back-button').style.display = 'none'; // Hide Back button
+    }
+  </script>
+</body>
+</html>

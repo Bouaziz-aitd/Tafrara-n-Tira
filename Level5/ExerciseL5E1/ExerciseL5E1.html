@@ -248,6 +248,20 @@
             english: "The magic flower\nLila found a flower in the forest. It shone like a star. When she touched it, a butterfly appeared. The butterfly led Lila to a secret clearing. There, she discovered a pond full of golden fish. It was the most beautiful day of her life.",
             french: "La fleur magique\nLila a trouvé une fleur dans la forêt. Elle brillait comme une étoile. Quand elle l’a touchée, un papillon est apparu. Le papillon a conduit Lila à une clairière secrète. Là, elle a découvert un étang plein de poissons dorés. C’était le plus beau jour de sa vie."
         };
+
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+	    
         let currentSentenceIndex = 0;
 
         function loadSentence() {
@@ -295,6 +309,7 @@
         }
 
         function resetGame() {
+	    openFullscreen();		
             currentSentenceIndex = 0;
             document.getElementById('corrections-container').innerHTML = '';
             document.getElementById('cycleControls').classList.add('hidden');
@@ -314,9 +329,11 @@
 
         function showTranslation(lang) {
             alert(translations[lang]);
+	    openFullscreen();
         }
 
         document.getElementById('launchGameButton').addEventListener('click', () => {
+	    openFullscreen();
             document.getElementById('gameContainer').classList.remove('hidden');
             document.getElementById('launchGameButton').style.display = 'none';
             loadSentence();

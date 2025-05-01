@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="kab">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urar s wawal n Teqbaylit - Aru Tazabut- Alaɣmu 5.1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 800px;
+        }
+        .sentence-box {
+            margin: 5px 0;
+            text-align: center;
+        }
+        .word-button.hidden {
+            display: none;
+        }
+        .word-button {
+            padding: 15px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+        }
+        .controls {
+            margin-top: 10px; /* Reduced spacing */
+        }
+        .controls button {
+            padding: 8px 16px;
+            font-size: 14px;
+            margin: 0 5px; /* Reduced spacing between buttons */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .controls button.play-again {
+            background-color: #28a745;
+            color: white;
+        }
+        .controls button.play-again:hover {
+            background-color: #218838;
+        }
+        .controls button.exit {
+            background-color: #dc3545;
+            color: white;
+        }
+        .controls button.exit:hover {
+            background-color: #c82333;
+        }
+        .hidden {
+            display: none;
+        }
+        .instructions {
+            margin-top: 20px;
+            font-size: 9px; /* Adjusted font size */
+            color: #555;
+        }
+        #launchGameButton {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #launchGameButton:hover {
+            background-color: #0056b3;
+        }
+        #listenUserButton {
+            background-color: #007bff;
+            color: white;
+        }
+        #nextWordButton {
+            background-color: #77dd77;
+            color: white;
+        }
+        .audio-buttons button {
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .audio-buttons button.small {
+            background-color: #0056b3;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .diacritic-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 5px;
+        }
+        .diacritic-buttons button {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px 8px;
+            cursor: pointer;
+        }
+        .response-message {
+            margin-top: 20px;
+            font-size: 10px; /* Adjusted font size */
+            font-weight: bold;
+        }
+        .response-message.correct {
+            color: green;
+        }
+        .response-message.incorrect {
+            color: red;
+        }
+        #submitAnswerButton {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 16px;
+            font-size: 10px; /* Adjusted font size */
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .correction-box {
+            margin-top: 5px;
+            font-size: 0.8em;
+            line-height: 1.2;
+        }
+        .correction-box.correct {
+            color: green;
+        }
+        .correction-box.incorrect {
+            color: red;
+        }
+        .language-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        .language-buttons button {
+            background-color: #9E9E9E;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .language-buttons button:hover {
+            background-color: #757575;
+        }
+        textarea {
+            width: 100%;
+            max-width: 700px;
+            padding: 10px;
+            font-size: 1em;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 5px;
+            resize: none;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Urar s wawal n Teqbaylit</h1>
+    <div class="subtitle">Aru - Tazabut s ccna - Alaɣmu 5.2</div>
+    <button id="launchGameButton">URAR</button>
+    <div class="game-container hidden" id="gameContainer">
+        <div class="instructions">Aru s yisekkilen imecṭuḥen war ticraḍ. ALES sel, AZEN seɣti.</div>
+        <div id="current-sentence-container">
+            <div class="audio-buttons">
+                <button id="normalPlaybackButton">ALES</button>
+                <button id="slowPlaybackButton" class="small">ALES</button>
+            </div>
+            <textarea id="userInput" placeholder="➔" rows="2" style="resize: none;" spellcheck="false"></textarea>
+            <button id="submitAnswerButton" onclick="submitAnswer()">AZEN</button>
+        </div>
+        <div class="diacritic-buttons">
+            <button onclick="addDiacritic('č')">č</button>
+            <button onclick="addDiacritic('ḍ')">ḍ</button>
+            <button onclick="addDiacritic('ǧ')">ǧ</button>
+            <button onclick="addDiacritic('ḥ')">ḥ</button>
+            <button onclick="addDiacritic('ṛ')">ṛ</button>
+            <button onclick="addDiacritic('ṣ')">ṣ</button>
+            <button onclick="addDiacritic('ṭ')">ṭ</button>
+            <button onclick="addDiacritic('ẓ')">ẓ</button>
+            <button onclick="addDiacritic('ɣ')">ɣ</button>
+            <button onclick="addDiacritic('ɛ')">ɛ</button>
+            <button onclick="addDiacritic('-')">-</button>
+        </div>
+        <div id="corrections-container"></div>
+        <div class="controls hidden" id="cycleControls">
+            <button class="play-again" onclick="resetGame()">Rnu Urar</button>
+            <button class="exit" onclick="exitGame()">Ffeɣ</button>
+        </div>
+        <div class="controls hidden" id="languageButtons">
+            <button onclick="showTranslation('kabyle')">TAQ</button>
+            <button onclick="showTranslation('english')">EN</button>
+            <button onclick="showTranslation('french')">FR</button>
+        </div>
+    </div>
+    <script>
+        const sentences = [
+            "ufiɣ tasekkurt teḥzen ur iban d acu i tt-yuɣen texmet kan seddaw uẓṛu",
+	    "mi tt-walaɣ temmuɣben ɣileɣ d lbaz i tt-yewwten neɣ tugad seg bururu",
+            "Ziɣen ar d iṣeyyaden i as-yerẓan afriwen mačči akka i tɛudd ad teḍru"
+        ];
+        const translations = {
+            kabyle: "Tasekkurt\nUfiɣ tasekkurt teḥzen ur iban d acu i tt-yuɣen texmet kan seddaw uẓṛu\nMi tt-walaɣ temmuɣben ɣileɣ d lbaz i tt-yewwten neɣ tugad seg bururu\nZiɣen ar d iṣeyyaden i as-yerẓan afriwen mačči akka i tɛudd ad teḍru",
+            english: "The partridge\nI found a sad partridge, troubled by something unknown, hiding beneath a stone\nWhen I saw her suffering, I thought an eagle had struck her or she feared the owl\nBut in fact, hunters had broken her wings - this is not how she expected things to unfold",
+            french: "La perdrix\nJ’ai trouvé une perdrix triste on ne sait pourquoi, cachée sous une pierre\nQuand je l’ai vue malheureuse, je pensais que l’aigle l’avait maltraitée ou qu’elle craignait le hibou\nEn fait, des chasseurs lui avaient brisé les ailes - ce n’est pas ainsi qu’elle escomptait l’issue"
+        };
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+        let currentSentenceIndex = 0;
+        function loadSentence() {
+            document.getElementById('userInput').value = '';
+            document.getElementById('normalPlaybackButton').onclick = () => playAudio(currentSentenceIndex + 1, 1);
+            document.getElementById('slowPlaybackButton').onclick = () => playAudio(currentSentenceIndex + 1, 0.6);
+        }
+        function playAudio(index, playbackRate = 1) {
+            const audio = new Audio(`audio/S${index}.ogg`);
+            audio.playbackRate = playbackRate;
+            audio.play().catch(error => {
+                console.error("Error playing audio:", error);
+            });
+        }
+        function submitAnswer() {
+            const userInput = document.getElementById('userInput').value.trim().toLowerCase();
+            const correctAnswer = sentences[currentSentenceIndex].toLowerCase();
+            const correctionsContainer = document.getElementById('corrections-container');
+            const correctionDiv = document.createElement('div');
+            correctionDiv.className = 'correction-box';
+            correctionDiv.textContent = userInput;
+            if (userInput === correctAnswer) {
+                correctionDiv.classList.add('correct');
+            } else {
+                correctionDiv.classList.add('incorrect');
+            }
+            correctionsContainer.appendChild(correctionDiv);
+            if (currentSentenceIndex < sentences.length - 1) {
+                currentSentenceIndex++;
+                loadSentence();
+            } else {
+                document.getElementById('cycleControls').classList.remove('hidden');
+                document.getElementById('languageButtons').classList.remove('hidden');
+            }
+        }
+        function addDiacritic(char) {
+            const input = document.getElementById('userInput');
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const value = input.value;
+            input.value = value.substring(0, start) + char + value.substring(end);
+            input.setSelectionRange(start + char.length, start + char.length);
+            input.focus();
+        }
+        function resetGame() {
+	    openFullscreen();
+            currentSentenceIndex = 0;
+            document.getElementById('corrections-container').innerHTML = '';
+            document.getElementById('cycleControls').classList.add('hidden');
+            document.getElementById('languageButtons').classList.add('hidden');
+            loadSentence();
+        }
+        function exitGame() {
+            if (confirm("Tebɣiḍ ad tefɣeḍ seg wurar?")) {
+                try {
+                    window.close();
+                } catch (error) {
+                    alert("Iminig-inek ur iteg ara tigawt-a. Mdel asfaylu s wufus.");
+                }
+            }
+        }
+        function showTranslation(lang) {
+            alert(translations[lang]);
+	    openFullscreen();
+        }
+        document.getElementById('launchGameButton').addEventListener('click', () => {
+	    openFullscreen();
+            document.getElementById('gameContainer').classList.remove('hidden');
+            document.getElementById('launchGameButton').style.display = 'none';
+            loadSentence();
+        });
+    </script>
+</body>
+</html>

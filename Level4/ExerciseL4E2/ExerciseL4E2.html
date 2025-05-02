@@ -11,9 +11,6 @@
             padding: 0;
             background-color: #f9f9f9;
         }
-        .launch-screen, .header, .game-container {
-            display: none;
-        }
         .launch-screen {
             display: flex;
             flex-direction: column;
@@ -48,6 +45,8 @@
         .header {
             text-align: center;
             padding: 20px;
+            position: relative;
+            display: none;
         }
         .main-title {
             font-size: 2em;
@@ -77,42 +76,42 @@
         .sefti-button:hover {
             background-color: #218838;
         }
-.game-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto; /* Centers the container */
-    display: none;
-}
-.verb-row {
-    display: flex;
-    justify-content: center; /* Centers content horizontally */
-    align-items: center;
-    gap: 10px; /* Space between elements */
-    margin: 15px 0;
-    width: 100%; /* Takes full width of parent */
-}
-.kabyle-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    flex: 1;
-    max-width: 60%; /* Adjusted width */
-    transition: background-color 0.3s;
-}
-        
-	.kabyle-btn:hover {
+        .game-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            display: none;
+        }
+        .verb-row {
+            display: flex;
+            justify-content: center; /* Center content */
+            align-items: center;
+            gap: 10px; /* Space between elements */
+            margin: 15px 0;
+            max-width: 600px;
+            width: 100%;
+        }
+        .kabyle-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            flex: 1;
+            max-width: 60%; /* Reduced width */
+            transition: background-color 0.3s;
+        }
+        .kabyle-btn:hover {
             background-color: #0056b3;
         }
-.lang-container {
-    display: flex;
-    gap: 5px;
-    flex: 0 0 auto; /* Prevent growth/shrink */
-}
+        .lang-container {
+            display: flex;
+            gap: 5px;
+            flex: 0 0 auto; /* Prevent growth/shrink */
+        }
         .lang-btn {
-            width: 50px;
+            width: 50px; /* Fixed width */
             padding: 5px 0;
             background-color: #6c757d;
             color: white;
@@ -152,6 +151,31 @@
         .exit:hover {
             background-color: #c82333;
         }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext,
+        .tooltip.active .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
         iframe {
             width: 100%;
             height: 500px;
@@ -161,11 +185,12 @@
         @media (max-width: 600px) {
             .verb-row {
                 flex-direction: column;
-                align-items: stretch;
+                align-items: center;
             }
             .lang-container {
                 flex-direction: column;
                 width: 100%;
+                align-items: center;
             }
             .kabyle-btn {
                 max-width: 100%;
@@ -187,7 +212,7 @@
     </div>
 
     <!-- Main Interface -->
-    <div class="header">
+    <div class="header" style="display: none;">
         <div class="main-title">Urar s wawal n Teqbaylit</div>
         <div class="subtitle-container">
             <div class="subtitle">Amyag - Alaɣmu 4.2</div>
@@ -195,7 +220,7 @@
         </div>
     </div>
 
-    <div class="game-container" id="gameContainer">
+    <div class="game-container" id="gameContainer" style="display: none;">
         <div id="verbContent"></div>
         <div class="controls" id="actionButtons">
             <button class="play-again" onclick="restartQuiz()" style="display: none;">Rnu Urar</button>
@@ -235,6 +260,7 @@
         ];
         let currentVerbIndex = 0;
 
+        // Launch game setup
         document.getElementById('launchGameButton').addEventListener('click', () => {
             document.querySelector('.launch-screen').style.display = 'none';
             document.querySelector('.header').style.display = 'block';
@@ -269,16 +295,19 @@
 
         function createLangButton(lang, text) {
             const btn = document.createElement('button');
-            btn.className = `lang-btn`;
+            btn.className = `lang-btn tooltip`;
             btn.textContent = lang;
-            btn.title = text;
+            const tooltip = document.createElement('span');
+            tooltip.className = 'tooltiptext';
+            tooltip.textContent = text;
+            btn.appendChild(tooltip);
             return btn;
         }
 
         function nextVerb() {
             currentVerbIndex = (currentVerbIndex + 1) % 4;
             loadVerb(currentVerbIndex);
-            if(currentVerbIndex === 3) {
+            if (currentVerbIndex === 3) {
                 document.getElementById('dduButton').style.display = 'none';
                 document.querySelector('.play-again').style.display = 'inline-block';
                 document.querySelector('.exit').style.display = 'inline-block';
@@ -294,7 +323,7 @@
         }
 
         function endQuiz() {
-            if(confirm("Tebɣiḍ ad tefɣeḍ?")) {
+            if (confirm("Tebɣiḍ ad tefɣeḍ?")) {
                 window.close();
             }
         }
@@ -304,7 +333,7 @@
             const gameContainer = document.getElementById('gameContainer');
             iframe.style.display = iframe.style.display === 'block' ? 'none' : 'block';
             gameContainer.style.display = gameContainer.style.display === 'none' ? 'block' : 'none';
-            if(iframe.style.display === 'block') {
+            if (iframe.style.display === 'block') {
                 iframe.src = `https://www.amyag.com/f/NDU/verb${currentVerbIndex + 1}`;
             } else {
                 iframe.src = '';
@@ -316,6 +345,13 @@
             const audio = new Audio(`audio/${cleanedPhrase}.ogg`);
             audio.play().catch(err => console.error("Error playing audio:", err));
         }
+
+        // Tooltip click support for mobile
+        document.querySelectorAll('.tooltip').forEach(tooltip => {
+            tooltip.addEventListener('click', () => {
+                tooltip.classList.toggle('active');
+            });
+        });
     </script>
 </body>
 </html>

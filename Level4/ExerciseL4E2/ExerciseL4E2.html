@@ -1,83 +1,353 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kab">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kabyle Verb Quiz</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .verb-list {
-      margin-bottom: 20px;
-    }
-    .verb {
-      font-size: 1.2em;
-      margin: 5px 0;
-    }
-    .sefti-button, .back-button {
-      padding: 10px 20px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .sefti-button:hover, .back-button:hover {
-      background-color: #218838;
-    }
-    iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
-      display: none; /* Initially hidden */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urar s wawal n Teqbaylit - Amyag Alaɣmu 4.2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .launch-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .launch-title {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .launch-subtitle {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        #launchGameButton {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #launchGameButton:hover {
+            background-color: #0056b3;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            display: none;
+        }
+        .main-title {
+            font-size: 2em;
+            margin: 20px 0 10px;
+            color: #333;
+        }
+        .subtitle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #555;
+            margin-right: 15px;
+        }
+        .sefti-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .sefti-button:hover {
+            background-color: #218838;
+        }
+        .game-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            display: none;
+        }
+        .verb-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0; /* Increased vertical spacing */
+            max-width: 600px;
+            width: 100%;
+        }
+        .kabyle-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px; /* Increased padding */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            flex: 1;
+            margin-right: 10px;
+            max-width: 70%;
+            transition: background-color 0.3s;
+        }
+        .kabyle-btn:hover {
+            background-color: #0056b3;
+        }
+        .lang-container {
+            display: flex;
+            gap: 5px;
+            flex: 0 0 25%;
+        }
+        .lang-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 12px; /* Increased padding */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            flex: 1;
+            transition: background-color 0.3s;
+        }
+        .lang-btn:hover {
+            background-color: #5a6268;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .play-again {
+            background-color: #28a745;
+            color: white;
+        }
+        .play-again:hover {
+            background-color: #218838;
+        }
+        .exit {
+            background-color: #dc3545;
+            color: white;
+        }
+        .exit:hover {
+            background-color: #c82333;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .verb-row {
+                flex-direction: column;
+                align-items: center; /* Center alignment */
+                margin: 20px 0; /* Increased vertical spacing */
+            }
+            .lang-container {
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+            }
+            .kabyle-btn {
+                max-width: 100%;
+                margin-bottom: 15px; /* Increased space between buttons */
+                text-align: center;
+            }
+            .lang-btn {
+                width: 100%; /* Full width buttons */
+                margin: 5px 0; /* Spacing between language buttons */
+            }
+            .verb-row:last-child {
+                margin-bottom: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Header Section -->
-  <div class="header">
-    <h1>Kabyle Verbs</h1>
-    <button class="back-button" onclick="hideAmyag()" style="display: none;">Back to Verb List</button>
-  </div>
-
-  <!-- Verb List -->
-  <div class="verb-list">
-    <div class="verb">aru</div>
-    <div class="verb">ddem</div>
-    <div class="verb">azzel</div>
-  </div>
-
-  <!-- Sefti Button -->
-  <button class="sefti-button" onclick="showAmyag()">Sefti</button>
-
-  <!-- Amyag Iframe -->
-  <iframe id="amyag-iframe" src="https://www.amyag.com/f/NDU/aru"></iframe>
-
-  <script>
-    // Function to show Amyag iframe and hide the verb list
-    function showAmyag() {
-      document.querySelector('.verb-list').style.display = 'none'; // Hide verb list
-      document.querySelector('.sefti-button').style.display = 'none'; // Hide Sefti button
-      document.getElementById('amyag-iframe').style.display = 'block'; // Show Amyag iframe
-      document.querySelector('.back-button').style.display = 'inline-block'; // Show Back button
-    }
-
-    // Function to hide Amyag iframe and show the verb list
-    function hideAmyag() {
-      document.querySelector('.verb-list').style.display = 'block'; // Show verb list
-      document.querySelector('.sefti-button').style.display = 'inline-block'; // Show Sefti button
-      document.getElementById('amyag-iframe').style.display = 'none'; // Hide Amyag iframe
-      document.querySelector('.back-button').style.display = 'none'; // Hide Back button
-    }
-  </script>
+    <!-- Launch Screen -->
+    <div class="launch-screen">
+        <div class="launch-title">Urar s wawal n Teqbaylit</div>
+        <div class="launch-subtitle">Amyag- Alaɣmu 4.2</div>
+        <button id="launchGameButton">URAR</button>
+    </div>
+    <!-- Main Interface -->
+    <div class="header" style="display: none;">
+        <div class="main-title">Urar s wawal n Teqbaylit</div>
+        <div class="subtitle-container">
+            <div class="subtitle">Amyag - Alaɣmu 4.2</div>
+            <button class="sefti-button" onclick="toggleAmyag()">Sefti - Uɣal</button>
+        </div>
+    </div>
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <div id="verbContent"></div>
+        <div class="controls" id="actionButtons">
+            <button class="play-again" onclick="restartQuiz()" style="display: none;">Rnu Urar</button>
+            <button class="exit" onclick="endQuiz()" style="display: none;">Ffeɣ</button>
+            <button onclick="nextVerb()" id="dduButton" class="play-again">DDU</button>
+        </div>
+    </div>
+    <iframe id="amyagIframe"></iframe>
+    <script>
+        const verbs = [
+            [
+                { kab: "Ččiɣ tifirest", fr: "J’ai mangé une poire", en: "I ate a pear" },
+                { kab: "Ad ččeɣ imensi", fr: "Je dinerai", en: "I will have dinner" },
+                { kab: "Tetteɣ aɣrum", fr: "Je mange du pain", en: "I am eating bread" },
+                { kab: "Ur ččiɣ ara imekli", fr: "Je n’ai pas déjeuné", en: "I did not have lunch" }
+            ],
+            [
+                { kab: "Verb 2-1", fr: "Traduction 2-1", en: "Translation 2-1" },
+                { kab: "Verb 2-2", fr: "Traduction 2-2", en: "Translation 2-2" },
+                { kab: "Verb 2-3", fr: "Traduction 2-3", en: "Translation 2-3" },
+                { kab: "Verb 2-4", fr: "Traduction 2-4", en: "Translation 2-4" }
+            ],
+            [
+                { kab: "Verb 3-1", fr: "Traduction 3-1", en: "Translation 3-1" },
+                { kab: "Verb 3-2", fr: "Traduction 3-2", en: "Translation 3-2" },
+                { kab: "Verb 3-3", fr: "Traduction 3-3", en: "Translation 3-3" },
+                { kab: "Verb 3-4", fr: "Traduction 3-4", en: "Translation 3-4" }
+            ],
+            [
+                { kab: "Verb 4-1", fr: "Traduction 4-1", en: "Translation 4-1" },
+                { kab: "Verb 4-2", fr: "Traduction 4-2", en: "Translation 4-2" },
+                { kab: "Verb 4-3", fr: "Traduction 4-3", en: "Translation 4-3" },
+                { kab: "Verb 4-4", fr: "Traduction 4-4", en: "Translation 4-4" }
+            ]
+        ];
+        let currentVerbIndex = 0;
+        // Launch game setup
+        document.getElementById('launchGameButton').addEventListener('click', () => {
+            document.querySelector('.launch-screen').style.display = 'none';
+            document.querySelector('.header').style.display = 'block';
+            document.getElementById('gameContainer').style.display = 'block';
+            openFullscreen();
+            loadVerb(0);
+        });
+        function loadVerb(index) {
+            const container = document.getElementById('verbContent');
+            container.innerHTML = '';
+            verbs[index].forEach(conjugation => {
+                const row = document.createElement('div');
+                row.className = 'verb-row';
+                // Kabyle button
+                const kabBtn = document.createElement('button');
+                kabBtn.className = 'kabyle-btn';
+                kabBtn.textContent = conjugation.kab;
+                kabBtn.onclick = () => playAudio(conjugation.kab);
+                // Language buttons container
+                const langContainer = document.createElement('div');
+                langContainer.className = 'lang-container';
+                const enBtn = createLangButton('EN', conjugation.en);
+                const frBtn = createLangButton('FR', conjugation.fr);
+                langContainer.appendChild(enBtn);
+                langContainer.appendChild(frBtn);
+                row.appendChild(kabBtn);
+                row.appendChild(langContainer);
+                container.appendChild(row);
+            });
+        }
+        function createLangButton(lang, text) {
+            const btn = document.createElement('button');
+            btn.className = `lang-btn tooltip`;
+            btn.textContent = lang;
+            const tooltip = document.createElement('span');
+            tooltip.className = 'tooltiptext';
+            tooltip.textContent = text;
+            btn.appendChild(tooltip);
+            return btn;
+        }
+        function nextVerb() {
+            currentVerbIndex = (currentVerbIndex + 1) % 4;
+            loadVerb(currentVerbIndex);
+            if(currentVerbIndex === 3) {
+                document.getElementById('dduButton').style.display = 'none';
+                document.querySelector('.play-again').style.display = 'inline-block';
+                document.querySelector('.exit').style.display = 'inline-block';
+            }
+        }
+        function restartQuiz() {
+            currentVerbIndex = 0;
+            document.getElementById('dduButton').style.display = 'inline-block';
+            document.querySelector('.play-again').style.display = 'none';
+            document.querySelector('.exit').style.display = 'none';
+            loadVerb(0);
+        }
+        function endQuiz() {
+            if(confirm("Tebɣiḍ ad tefɣeḍ?")) {
+                window.close();
+            }
+        }
+        function toggleAmyag() {
+            const iframe = document.getElementById('amyagIframe');
+            const gameContainer = document.getElementById('gameContainer');
+            iframe.style.display = iframe.style.display === 'block' ? 'none' : 'block';
+            gameContainer.style.display = gameContainer.style.display === 'none' ? 'block' : 'none';
+            if(iframe.style.display === 'block') {
+                iframe.src = `https://www.amyag.com/f/NDU/verb${currentVerbIndex + 1}`;
+            } else {
+                iframe.src = '';
+            }
+        }
+        function playAudio(phrase) {
+            const cleanedPhrase = phrase.replace(/[?.]/g, '').replace(/\s+/g, '_');
+            const audio = new Audio(`audio/${cleanedPhrase}.ogg`);
+            audio.play().catch(err => console.error("Error playing audio:", err));
+        }
+        // Fullscreen function
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+    </script>
 </body>
-</html>

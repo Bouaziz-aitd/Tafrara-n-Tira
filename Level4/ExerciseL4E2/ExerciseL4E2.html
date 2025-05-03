@@ -84,13 +84,13 @@
         }
         .verb-row {
             display: flex;
-            justify-content: center; /* Center alignment */
+            justify-content: center;
             align-items: center;
-            gap: 10px; /* Space between elements 10*/
-            margin: 15px 0; //15
+            gap: 10px;
+            margin: 15px 0;
             width: 100%;
-            max-width: 400px; /* Limit width */
-            margin: auto; /* Center the row itself */
+            max-width: 400px;
+            margin: auto;
         }
         .kabyle-btn {
             background-color: #007bff;
@@ -100,8 +100,8 @@
             border-radius: 5px;
             cursor: pointer;
             flex: 1;
-            max-width: 60%; /* Reduced width */
-            transition: background-color 0.3s;	   
+            max-width: 60%;
+            transition: background-color 0.3s;
         }
         .kabyle-btn:hover {
             background-color: #0056b3;
@@ -109,20 +109,18 @@
         .lang-container {
             display: flex;
             gap: 5px;
-            flex: 0 0 auto; /* Fixed size */
-
+            flex: 0 0 auto;
         }
         .lang-btn {
-            width: 40px; /* Fixed width */
+            width: 40px;
             padding: 5px 0;
-            background-color: #D9D9D9; //#6c757d;
+            background-color: #D9D9D9;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
         .lang-btn:hover {
             background-color: #5a6268;
         }
@@ -204,16 +202,22 @@
                 margin: 5px 0;
             }
         }
+        /* Instruction Message Styles */
+        .instruction-message {
+            text-align: center;
+            font-size: 0.7em;
+            color: #555;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
     <!-- Launch Screen -->
     <div class="launch-screen">
         <div class="launch-title">Urar s wawal n Teqbaylit</div>
-        <div class="launch-subtitle">Amyag- Alaɣmu 4.2</div>
+        <div class="launch-subtitle">Amyag - Alaɣmu 4.2</div>
         <button id="launchGameButton">URAR</button>
     </div>
-
     <!-- Main Interface -->
     <div class="header" style="display: none;">
         <div class="main-title">Urar s wawal n Teqbaylit</div>
@@ -222,7 +226,6 @@
             <button class="sefti-button" onclick="toggleAmyag()">Sefti - Uɣal</button>
         </div>
     </div>
-
     <div class="game-container" id="gameContainer" style="display: none;">
         <div id="verbContent"></div>
         <div class="controls" id="actionButtons">
@@ -230,35 +233,41 @@
             <button class="exit" onclick="endQuiz()" style="display: none;">Ffeɣ</button>
             <button onclick="nextVerb()" id="dduButton" class="play-again">DDU</button>
         </div>
+        <!-- Instruction Message -->
+        <div class="instruction-message">
+            Tekki ɣef tefyir ad tesleḍ, DDU ɣer sdat neɣ Sefti ad teseftiḍ
+        </div>
     </div>
-
     <iframe id="amyagIframe"></iframe>
-
     <script>
         const verbs = [
             [
+		{ kab: "Ečč", fr: "Manger", en: "To eat" },
                 { kab: "Ččiɣ tifirest", fr: "J’ai mangé une poire", en: "I ate a pear" },
                 { kab: "Ad ččeɣ imensi", fr: "Je dinerai", en: "I will have dinner" },
                 { kab: "Tetteɣ aɣrum", fr: "Je mange du pain", en: "I am eating bread" },
                 { kab: "Ur ččiɣ ara imekli", fr: "Je n’ai pas déjeuné", en: "I did not have lunch" }
             ],
             [
-                { kab: "Verb 2-1", fr: "Traduction 2-1", en: "Translation 2-1" },
-                { kab: "Verb 2-2", fr: "Traduction 2-2", en: "Translation 2-2" },
-                { kab: "Verb 2-3", fr: "Traduction 2-3", en: "Translation 2-3" },
-                { kab: "Verb 2-4", fr: "Traduction 2-4", en: "Translation 2-4" }
+                { kab: "Aɣ", fr: "Acheter", en: "To buy" },
+                { kab: "Tuɣeḍ axxam", fr: "Tu as acheté une maison", en: "You bought a house" },
+                { kab: "Ad taɣeḍ ṭumubil", fr: "Tu achèteras une voiture", en: "You will buy a car" },
+                { kab: "Tettaɣeḍ iselman", fr: "Tu achètes du poisson", en: "You buy fish" },
+                { kab: "Ur tuɣeḍ ara aksum", fr: "Tu n'as pas acheté la viande", en: "You did not buy meat" }
             ],
             [
-                { kab: "Verb 3-1", fr: "Traduction 3-1", en: "Translation 3-1" },
-                { kab: "Verb 3-2", fr: "Traduction 3-2", en: "Translation 3-2" },
-                { kab: "Verb 3-3", fr: "Traduction 3-3", en: "Translation 3-3" },
-                { kab: "Verb 3-4", fr: "Traduction 3-4", en: "Translation 3-4" }
+                { kab: "Ini", fr: "Dire", en: "To tell" },
+                { kab: "Yenna ayen nnan", fr: "Il a dit ce qu'ils ont dit", en: "He said what they said" },
+                { kab: "Ad yini ayen yellan deg wul", fr: "Il dira ce qu'il y a dans le coeur", en: "He will say what is in the hart" },
+                { kab: "Yettini tidet", fr: "Il dit la vérité", en: "He says the truth" },
+                { kab: "Ur yenni ara d acu iwala", fr: "Il n'as pas dit ce qu'il a vu", en: "He did not say what he saw" }
             ],
             [
-                { kab: "Verb 4-1", fr: "Traduction 4-1", en: "Translation 4-1" },
-                { kab: "Verb 4-2", fr: "Traduction 4-2", en: "Translation 4-2" },
-                { kab: "Verb 4-3", fr: "Traduction 4-3", en: "Translation 4-3" },
-                { kab: "Verb 4-4", fr: "Traduction 4-4", en: "Translation 4-4" }
+                { kab: "Ili", fr: "Être", en: "To be" },
+                { kab: "Tella deg  wasif", fr: "Elle était à la rivière", en: "She was at the river" },
+                { kab: "Ad tili yid-sen", fr: "Elle sera avec eux", en: "She will be with them" },
+                { kab: "Tettili deg lexla yal ass", fr: "Elle est dans le champ chaque jour", en: "She is at the field everyday" },
+                { kab: "Ur telli ara mi yeɣli", fr: "Elle n'était pas là quand il est tombé", en: "She was not there when he fell" }
             ]
         ];
         let currentVerbIndex = 0;
@@ -268,6 +277,7 @@
             document.querySelector('.launch-screen').style.display = 'none';
             document.querySelector('.header').style.display = 'block';
             document.getElementById('gameContainer').style.display = 'block';
+            openFullscreen();
             loadVerb(0);
         });
 
@@ -277,19 +287,16 @@
             verbs[index].forEach(conjugation => {
                 const row = document.createElement('div');
                 row.className = 'verb-row';
-
                 const kabBtn = document.createElement('button');
                 kabBtn.className = 'kabyle-btn';
                 kabBtn.textContent = conjugation.kab;
                 kabBtn.onclick = () => playAudio(conjugation.kab);
-
                 const langContainer = document.createElement('div');
                 langContainer.className = 'lang-container';
                 const enBtn = createLangButton('EN', conjugation.en);
                 const frBtn = createLangButton('FR', conjugation.fr);
                 langContainer.appendChild(enBtn);
                 langContainer.appendChild(frBtn);
-
                 row.appendChild(kabBtn);
                 row.appendChild(langContainer);
                 container.appendChild(row);
@@ -325,11 +332,10 @@
             loadVerb(0);
         }
 
- 
-
         function endQuiz() {
             if (confirm("Tebɣiḍ ad tefɣeḍ?")) {
-                window.close();
+                // window.location.href = "about:blank"; // Redirect to a blank page
+		window.close();
             }
         }
 
@@ -349,6 +355,20 @@
             const cleanedPhrase = phrase.replace(/[?.]/g, '').replace(/\s+/g, '_');
             const audio = new Audio(`audio/${cleanedPhrase}.ogg`);
             audio.play().catch(err => console.error("Error playing audio:", err));
+        }
+
+        // Fullscreen function
+        function openFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
         }
 
         // Tooltip click support for mobile

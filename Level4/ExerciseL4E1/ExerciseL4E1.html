@@ -55,6 +55,10 @@
             background-color: #28a745;
             color: white;
         }
+        .btn-red {
+            background-color: #dc3545;
+            color: white;
+        }
         .btn-info {
             background-color: #17a2b8;
             color: white;
@@ -178,8 +182,8 @@
             </div>
 
             <div class="word-container">
-                <button class="btn-blue" onclick="playFreeFormAudio()"></button>
-                <button class="btn-sand" onclick="playAnnexedFormAudio()"></button>
+                <button class="btn-sand" onclick="playFreeFormAudio()"></button>
+                <button class="btn-blue" onclick="playAnnexedFormAudio()"></button>
             </div>
 
             <div class="controls">
@@ -192,23 +196,23 @@
 
             <div class="controls hidden" id="cycleControls">
                 <button class="btn-green" onclick="resetGame()">Rnu Urar</button>
-                <button class="btn-green" onclick="exitGame()">Ffeɣ</button>
+                <button class="btn-red" onclick="exitGame()">Ffeɣ</button>
             </div>
         </div>
     </main>
 
     <script>
         const words = [
-            { free: "axxam", annexed: "yeṭṭes deg uxxam", fr: "Il dort dans la maison", en: "His is sleeping in the house", freeAudio: "audio/axxam.ogg", annexedAudio: "audio/axxam_uxxam.ogg" },
-            { free: "Argaz d yimeṛṛa", annexed: "Urgaz d yimeṛṛa", fr: "L'homme et ses amis", en: "The man and his friends", freeAudio: "audio/argaz_free.ogg", annexedAudio: "audio/urgaz_annexed.ogg" },
-            { free: "Asif s waɛraben", annexed: "Wasif s waɛraben", fr: "La rivière avec des poissons", en: "The river with fish", freeAudio: "audio/asif_free.ogg", annexedAudio: "audio/wasif_annexed.ogg" },
-            { free: "Aqcic s tazzit", annexed: "Uqcic s tazzit", fr: "Le chat sur la table", en: "The cat on the table", freeAudio: "audio/aqcic_free.ogg", annexedAudio: "audio/uqcic_annexed.ogg" },
-            { free: "Ass d wayen", annexed: "Wass d wayen", fr: "Le jour est beau", en: "The day is beautiful", freeAudio: "audio/ass_free.ogg", annexedAudio: "audio/wass_annexed.ogg" },
-            { free: "Aɣerbaz n tmurt", annexed: "Uɣerbaz n tmurt", fr: "L'école du village", en: "The village school", freeAudio: "audio/aɣerbaz_free.ogg", annexedAudio: "audio/uɣerbaz_annexed.ogg" },
-            { free: "Awal d tidett", annexed: "Uwal d tidett", fr: "Le mot et l'idée", en: "The word and the idea", freeAudio: "audio/awal_free.ogg", annexedAudio: "audio/uwal_annexed.ogg" },
-            { free: "Abbab d yimeslayen", annexed: "Ubabb d yimeslayen", fr: "La porte et les clés", en: "The door and the keys", freeAudio: "audio/abbab_free.ogg", annexedAudio: "audio/ubbab_annexed.ogg" },
-            { free: "Aweḍṛes n waman", annexed: "Uweḍṛes n waman", fr: "La fenêtre et le ciel", en: "The window and the sky", freeAudio: "audio/aweḍṛes_free.ogg", annexedAudio: "audio/uweḍṛes_annexed.ogg" },
-            { free: "Asefra s timlilitin", annexed: "Usefra s timlilitin", fr: "Le livre avec des images", en: "The book with pictures", freeAudio: "audio/asefra_free.ogg", annexedAudio: "audio/usefra_annexed.ogg" }
+           { free: "Axxam", annexed: "Yeṭṭes deg uxxam", fr: "Il dort dans la maison", en: "He is sleeping in the house", freeAudio: "audio/Axxam.ogg", annexedAudio: "audio/Yeṭṭes_deg_uxxam.ogg" },
+           { free: "Argaz", annexed: "Yedda akked urgaz", fr: "Il est allé avec l’homme", en: "He went with the man", freeAudio: "audio/Argaz.ogg", annexedAudio: "audio/Yedda_akked_urgaz.ogg" },
+           { free: "Asif", annexed: "Yeɣli deg wasif", fr: "Il est tombé dans la rivière", en: " He fell in the river", freeAudio: "audio/Asif.ogg", annexedAudio: "audio/Yeɣli_deg_wasif.ogg" },
+           { free: "Taqcict", annexed: "Taqenduṛt n teqcict", fr: "La robe de la fille", en: "The girl’s dress", freeAudio: "audio/Taqcict.ogg", annexedAudio: "audio/Taqenduṛt_n_teqcict.ogg" },
+           { free: "Ass", annexed: "Yeggan deg wass", fr: "Il dort le jour", en: "He sleeps during the day", freeAudio: "audio/Ass.ogg", annexedAudio: "audio/Yeggan_deg_wass.ogg" },
+           { free: "Aɣerbaz", annexed: "Taneɣrit n uɣerbaz", fr: "La classe de l'école", en: "The classroom of the school", freeAudio: "audio/Aɣerbaz.ogg", annexedAudio: "audio/Taneɣrit_n_uɣerbaz.ogg" },
+           { free: "Awal", annexed: "Tidet nnig wawal", fr: "La vérité au dessus du mot", en: "The truth above the word", freeAudio: "audio/Awal.ogg", annexedAudio: "audio/Tidet_nnig_wawal.ogg" },
+           { free: "Tawwurt", annexed: "Amcic deffir tewwurt", fr: "Le chat derrière la porte", en: "The cat behind the door", freeAudio: "audio/Tawwurt.ogg", annexedAudio: "audio/Amcic_deffir_tewwurt.ogg" },
+           { free: "Taddart", annexed: "Tibḥirt seddaw taddart", fr: "Le jardin en bas du village", en: "The garden bellow the village", freeAudio: "audio/Taddart.ogg", annexedAudio: "audio/Tibḥirt_seddaw_taddart.ogg" },
+           { free: "Anaẓuṛ", annexed: "Asefru d awal n unaẓuṛ", fr: "Le poème est la parole de l’artiste", en: "The poem is the word of the artist", freeAudio: "audio/Anaẓuṛ.ogg", annexedAudio: "audio/Asefru_d_awal_n_unaẓuṛ.ogg" }
         ];
         let currentWordIndex = 0;
 
@@ -274,8 +278,8 @@
 
         function loadWord(index) {
             const word = words[index];
-            document.querySelector('.word-container .btn-blue').textContent = word.free;
-            document.querySelector('.word-container .btn-sand').textContent = word.annexed;
+            document.querySelector('.word-container .btn-sand').textContent = word.free;
+            document.querySelector('.word-container .btn-blue').textContent = word.annexed;
             document.getElementById('frenchSentence').textContent = `Français: ${word.fr}`;
             document.getElementById('englishSentence').textContent = `English: ${word.en}`;
         }
